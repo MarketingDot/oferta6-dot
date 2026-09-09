@@ -405,6 +405,25 @@ button { font: inherit; color: inherit; }
 .gift-list__name { flex: 1; min-width: 0; }
 .gift-list__was  { flex: none; white-space: nowrap; color: var(--gray); text-decoration: line-through; }
 
+/* preco com desconto dos pouches: azul, porque sobre o creme o destaque
+   e sempre azul -- o amarelo do GRATIS so vale para o que nao se paga */
+.now {
+  flex: none;
+  min-width: 74px;
+  text-align: center;
+  font-size: 14px; font-weight: 700;
+  color: var(--blue);
+  white-space: nowrap;
+}
+.free { min-width: 74px; text-align: center; }
+
+/* fio separando o que e pago do que vem de brinde */
+.gift-list__sep { position: relative; margin-top: 6px; padding-top: 12px; }
+.gift-list__sep::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0;
+  border-top: 1px dashed var(--navy-14);
+}
+
 .free {
   flex: none;
   padding: 2px 7px;

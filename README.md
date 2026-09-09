@@ -39,6 +39,7 @@ Nada além disso: sem prova social, sem marquee, sem faixa de sabores.
 | Produto | 2× Pouch de 25 sachês = **50 doses** |
 | Sabores à escolha | Menta · Frutas vermelhas · Citrus · Melancia com limão |
 | Brindes | Mousepad (R$ 35) · Bloco de notas (R$ 45) · Mini pouch melancia (R$ 25) |
+| Por pouch | De R$ 162,49 por **R$ 149,95** |
 | De | R$ 429,98 |
 | Por | **R$ 299,90** — 30% OFF, economia de R$ 130,08 |
 | Por dose | R$ 5,99 |
@@ -114,6 +115,30 @@ prorrogação e estado final. Ver "Contador".
 
 **4. ~~Seleção de sabor~~** — resolvido: existem os dois seletores. Ver
 "Seletor de sabores".
+
+## Bloco "Seu kit"
+
+A caixa tracejada do card detalha a oferta item a item, com **um título azul só**:
+
+| Item | De | Por |
+|---|---|---|
+| Pouch de 25 sachês | R$ 162,49 | R$ 149,95 |
+| Pouch de 25 sachês | R$ 162,49 | R$ 149,95 |
+| Mousepad DOT | R$ 35 | Grátis |
+| Bloco de notas | R$ 45 | Grátis |
+| Mini pouch melancia | R$ 25 | Grátis |
+
+**A conta fecha com os dois preços da página** — e é por isso que esses números
+não podem ser mexidos isoladamente:
+
+```
+2 × 162,49 + 105 (brindes) = 429,98   ← o "de" da oferta
+2 × 149,95                 = 299,90   ← o "por" da oferta
+```
+
+Um fio tracejado (`.gift-list__sep`) separa o que é pago do que é brinde. O
+preço com desconto usa `.now` em azul, não o amarelo do `.free`: sobre o creme
+o destaque é sempre azul, e o amarelo fica reservado para o que não se paga.
 
 ## Contador
 
