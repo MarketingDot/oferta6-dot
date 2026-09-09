@@ -223,8 +223,23 @@ button { font: inherit; color: inherit; }
   cursor: pointer;
 }
 
-.is-expired .timer     { display: none; }
-.is-expired .more-time { display: flex; }
+/* Estado "reservado" — depois da prorrogacao a RYZE troca tudo por OFFER RESERVED */
+.reserved {
+  display: none;
+  align-items: center;
+  padding: 7px 16px;
+  border-radius: 6px;
+  background: rgba(254, 251, 230, .14);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.is-expired  .timer    { display: none; }
+.is-reserved .timer    { display: none; }
+.is-expired  .more-time { display: flex; }
+.is-reserved .reserved  { display: flex; }
 
 @media (min-width: 992px) {
   .salebar { gap: 28px; }
@@ -340,7 +355,7 @@ button { font: inherit; color: inherit; }
 .gallery__thumbs .compo { inset: 5px; }
 
 /* --- Card --- */
-.card { display: flex; flex-direction: column; gap: 16px; }
+.card { display: flex; flex-direction: column; gap: 11px; }
 
 .rating { display: flex; align-items: center; gap: 8px; }
 .rating__stars { display: flex; gap: 2px; color: var(--blue); }
@@ -356,15 +371,14 @@ button { font: inherit; color: inherit; }
 /* Brindes dentro do card */
 .gifts-box {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 10px;
   padding: 16px;
   border: 1px dashed var(--navy-14);
   border-radius: var(--radius);
   background: var(--cream-card);
 }
 
-.gifts-box__left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
 
 .tag {
   align-self: flex-start;
@@ -379,8 +393,15 @@ button { font: inherit; color: inherit; }
 }
 
 .gift-list { display: flex; flex-direction: column; gap: 9px; }
-.gift-list li { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.25; }
-.gift-list svg { flex: none; color: var(--blue); }
+.gift-list li { display: flex; align-items: center; gap: 10px; font-size: 15px; line-height: 1.25; }
+/* O "+" que ficava entre a miniatura e o nome foi removido: ali ele virava
+   operador, e a linha lia como "ganha a imagem MAIS o mousepad".
+   As imagens ja sao transparentes, entao nao levam fundo nenhum. */
+.gift-list__img {
+  flex: none;
+  width: 48px; height: 48px;
+  object-fit: contain;
+}
 .gift-list__name { flex: 1; min-width: 0; }
 .gift-list__was  { flex: none; white-space: nowrap; color: var(--gray); text-decoration: line-through; }
 
@@ -396,26 +417,189 @@ button { font: inherit; color: inherit; }
   text-transform: uppercase;
 }
 
-.gifts-box__media { flex: none; width: 112px; }
 
 /* Preço */
-.price__label { font-size: 18px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: var(--blue); }
-.price__row   { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 2px; }
-.price__now   { font-size: clamp(2rem, 8.6vw, 2.5rem); font-weight: 700; letter-spacing: -.02em; }
-.price__was   { font-size: clamp(1.5rem, 6.4vw, 2rem); font-weight: 500; color: var(--gray); text-decoration: line-through; }
+.price__label { margin: 0; grid-area: 1 / 1 / 2 / 2; align-self: baseline; font-size: clamp(0.9rem, 4.6vw, 1.125rem); font-weight: 700; line-height: 1.2; letter-spacing: .03em; text-transform: uppercase; color: var(--blue); }
+/* 3 linhas: rotulo + desconto / precos / unidade (2 col) */
+.price { display: grid; grid-template-columns: auto auto; justify-content: start;
+         align-items: center; column-gap: 14px; row-gap: 6px; margin-top: 14px; }
+.price__now   { font-size: clamp(2rem, 8.6vw, 2.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -.02em; }
+.price__was   { font-size: clamp(1.5rem, 6.4vw, 2rem); font-weight: 500; line-height: 1.05; color: var(--gray); text-decoration: line-through; }
+.price__now { grid-area: 2 / 1 / 3 / 2; }
+.price__was { grid-area: 2 / 2 / 3 / 3; }
+.price__now, .price__was { align-self: baseline; }
 
 .price__badge {
-  padding: 6px 10px;
-  border-radius: 4px;
-  background: var(--blue);
-  color: var(--cream);
+  grid-area: 1 / 2 / 2 / 3;
+  justify-self: end;      /* encostado a direita, sobre o fim do preco riscado */
+  align-self: end;
+  margin-bottom: -12px;   /* desce ate quase tocar a riscada, que recua ~7px na linha */
+  color: var(--blue);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: .03em;
   text-transform: uppercase;
 }
 
-.price__unit { margin-top: 2px; font-size: 17px; font-weight: 500; color: var(--blue); }
+.price__unit { margin: 4px 0 0; grid-area: 3 / 1 / 4 / -1; font-size: 17px; font-weight: 500; line-height: 1.2; color: var(--blue); }
+
+/* ---------- Popup de sabores ----------
+   3 etapas: sabor 1, sabor 2, brindes. Escolher avanca sozinho;
+   a seta volta. O <dialog> nativo ainda varia demais entre navegadores
+   com backdrop customizado, entao e overlay na mao + foco preso.       */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+.modal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: flex-end; justify-content: center; }
+.modal[hidden] { display: none; }
+
+.modal__backdrop {
+  position: absolute; inset: 0;
+  background: rgba(4, 20, 47, .55);
+  opacity: 0;
+  transition: opacity .26s ease;
+}
+.modal.is-open .modal__backdrop { opacity: 1; }
+
+.modal__sheet {
+  position: relative;
+  display: flex; flex-direction: column; gap: 14px;
+  width: min(720px, 100%);
+  max-height: 92vh;
+  padding: 10px var(--gutter) calc(var(--gutter) + env(safe-area-inset-bottom));
+  border-radius: 20px 20px 0 0;
+  background: var(--cream-card);
+  overflow-y: auto;
+  transform: translateY(14px) scale(.98);
+  opacity: 0;
+  transition: transform .3s cubic-bezier(.22, .61, .36, 1), opacity .22s ease;
+}
+.modal.is-open .modal__sheet { transform: none; opacity: 1; }
+
+.modal__grip { align-self: center; width: 56px; height: 5px; border-radius: 3px; background: var(--navy-14); }
+
+.modal__head { display: flex; align-items: center; gap: 10px; }
+.modal__title { flex: 1; margin: 0; font-size: clamp(1.25rem, 5.4vw, 1.75rem); font-weight: 700; line-height: 1.15; letter-spacing: -.02em; color: var(--navy); }
+
+.modal__back, .modal__close {
+  flex: none; display: grid; place-items: center;
+  width: 38px; height: 38px; padding: 0;
+  border: 0; border-radius: 10px;
+  background: var(--navy-08); color: var(--navy);
+  cursor: pointer;
+}
+.modal__back[hidden] { display: none; }
+
+.modal__steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.modal__step  { height: 5px; border-radius: 3px; background: var(--navy-14); }
+.modal__step.is-done { background: #2fa84f; }
+
+/* as 3 etapas ficam lado a lado num trilho; trocar de etapa e translateX.
+   touch-action: pan-y deixa a rolagem vertical para o navegador e fica so
+   com o gesto horizontal -- sem isso o arraste briga com o scroll da folha. */
+.modal__body  { overflow: hidden; }
+.modal__track {
+  display: flex;
+  align-items: flex-start;
+  touch-action: pan-y;
+  transition: transform .38s cubic-bezier(.22, .61, .36, 1);
+}
+.modal__track.is-dragging { transition: none; cursor: grabbing; }
+
+/* o selo de check fica 9px fora do cartao. Sem essa folga ele encosta na
+   borda do painel: o do vizinho vaza para dentro da area visivel, e o da
+   primeira linha e cortado pelo overflow do body. */
+.modal__panel { flex: 0 0 100%; margin: 0; padding: 12px 14px 0; border: 0; min-width: 0; }
+
+.pick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+.pick {
+  position: relative;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 10px 12px;
+  border: 2px solid var(--navy-08);
+  border-radius: 14px;
+  background: var(--cream-card);
+  cursor: pointer;
+  text-align: center;
+}
+.pick input {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%); overflow: hidden; white-space: nowrap;
+}
+
+.pick__media { display: grid; place-items: center; border-radius: 10px; background: var(--cream-2); }
+.pick__media img { width: 100%; height: 150px; object-fit: contain; }
+
+.pick__name  { font-size: 15px; font-weight: 700; font-style: italic; line-height: 1.2; color: var(--navy); }
+.pick__value { font-size: 13px; font-weight: 700; color: var(--blue); }
+
+/* o selo so aparece quando marcado */
+.pick__check { position: absolute; top: -9px; right: -9px; color: var(--yellow); opacity: 0; transform: scale(.6); transition: opacity .14s, transform .14s; }
+.pick.is-on, .pick.is-won { border-color: var(--yellow); }
+.pick.is-on  .pick__check,
+.pick.is-won .pick__check { opacity: 1; transform: scale(1); }
+.pick.has-focus { outline: 2px solid var(--blue); outline-offset: 2px; }
+.pick.is-won { cursor: default; }
+
+.pick-grid--gifts .pick--wide { grid-column: 1 / -1; justify-self: center; width: min(100%, 300px); }
+
+/* rodape das etapas 1 e 2: mostra o que ja esta garantido enquanto o
+   botao de finalizar ainda nao aparece (ele so entra na etapa 3) */
+.unlocked {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px;
+  border: 2px solid var(--navy);
+  border-radius: 14px;
+  background: rgba(15, 45, 114, .06);
+}
+.unlocked[hidden] { display: none; }
+
+.unlocked__text {
+  flex: 1; min-width: 0; margin: 0;
+  font-size: 13px; font-style: italic; line-height: 1.35;
+  color: var(--navy);
+}
+.unlocked__text strong { font-weight: 700; }
+
+/* uma miniatura de cada vez, revezando: as 3 lado a lado comiam 110px dos
+   345 e jogavam o texto para 4 linhas */
+.unlocked__media { flex: none; position: relative; width: 42px; height: 42px; }
+.unlocked__media img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(.88);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.unlocked__media img.is-on { opacity: 1; transform: none; }
+
+.modal__cta { width: 100%; }
+.modal__cta[hidden] { display: none; }
+
+@media (min-width: 992px) {
+  .unlocked__text { font-size: 15px; }
+  .unlocked__media { width: 54px; height: 54px; }
+}
+
+/* quem pediu menos movimento nao leva nem carrossel nem slide de abertura */
+@media (prefers-reduced-motion: reduce) {
+  .modal__backdrop, .modal__sheet, .modal__track, .pick__check,
+  .unlocked__media img { transition: none; }
+  .modal__sheet { transform: none; }
+}
+
+@media (min-width: 992px) {
+  .modal { align-items: center; }
+  .modal__sheet { border-radius: 20px; max-height: 88vh; }
+  .pick__media img { height: 190px; }
+  .pick__name { font-size: 17px; }
+}
 
 .urgency {
   display: flex;
@@ -433,8 +617,10 @@ button { font: inherit; color: inherit; }
 
 .urgency .more-time__label { color: var(--blue); }
 .urgency .more-time__btn   { background: var(--blue); color: var(--cream); }
-.is-expired .urgency__time { display: none; }
-.is-expired .urgency .more-time { display: flex; }
+.urgency .reserved { background: rgba(15, 45, 114, .12); color: var(--blue); }
+.is-expired  .urgency__time { display: none; }
+.is-reserved .urgency__time { display: none; }
+.is-expired  .urgency .more-time { display: flex; }
 
 .autodiscount {
   align-self: center;
@@ -450,29 +636,48 @@ button { font: inherit; color: inherit; }
 .assurances svg { flex: none; color: var(--blue); }
 
 /* Os 3 bullets que fecham o bloco, como na RYZE */
-.bullets { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
-.bullet  { display: flex; align-items: flex-start; gap: 14px; }
-.bullet svg { flex: none; color: var(--blue); }
+/* estrutura da RYZE: icone grande, centralizado no bloco de texto,
+   vao largo entre os dois e bastante respiro entre os itens */
+.bullets { display: flex; flex-direction: column; gap: 26px; padding-top: 22px; }
+.bullet  { display: flex; align-items: center; gap: 20px; }
+.bullet svg { flex: none; width: 64px; height: 64px; color: var(--blue); }
 
 /* O ícone da embalagem é a ilustração original, não um SVG do sprite */
-.bullet__icon { flex: none; width: auto; height: 36px; }
-.bullet span { font-size: 17px; font-weight: 500; line-height: 1.35; }
+.bullet__icon { flex: none; width: auto; height: 64px; }
+/* texto centralizado e com as duas linhas equilibradas em vez de
+   encostado na esquerda; balance evita a segunda linha orfa */
+.bullet span {
+  flex: 1; min-width: 0;
+  font-size: 17px; font-weight: 500; line-height: 1.35;
+  text-align: center;
+  text-wrap: balance;
+}
 
 @media (min-width: 992px) {
   .offer__head   { margin-bottom: 32px; }
   .offer__layout { flex-direction: row; align-items: flex-start; gap: 64px; }
   .offer__gallery{ flex: 0 0 49%; min-width: 0; position: sticky; top: calc(var(--nav-h) + 20px); }
   .offer__card   { flex: 1; min-width: 0; }
-  .card { gap: 20px; }
-  .gifts-box__media { width: 180px; }
+  .card { gap: 14px; }
   .gift-list li { font-size: 16px; }
-  .bullet span { font-size: 18px; }
+  .bullets { gap: 32px; padding-top: 28px; }
+  .bullet  { gap: 26px; }
+  .bullet svg { width: 80px; height: 80px; }
+  .bullet__icon { height: 80px; }
+  .bullet span { font-size: 19px; }
 }
 
 @media (max-width: 400px) {
   .gifts-box { gap: 8px; padding: 14px; }
-  .gifts-box__media { width: 92px; }
   .gift-list li { font-size: 14px; gap: 6px; }
+
+  /* icone, vao e corpo menores para o texto fechar em 2 linhas.
+     A 320px o maior bullet precisa de 1,8 linha -- com 15px eram 2,01,
+     e esse 1% de estouro ja jogava tudo para a terceira linha. */
+  .bullet { gap: 12px; }
+  .bullet svg { width: 44px; height: 44px; }
+  .bullet__icon { height: 44px; }
+  .bullet span { font-size: 14px; }
 }
 
 /* ============================================================
@@ -550,7 +755,8 @@ button { font: inherit; color: inherit; }
 .benefits .cta-block { margin-top: 32px; }
 
 @media (min-width: 992px) {
-  .benefits__grid { grid-template-columns: repeat(3, 1fr); gap: 44px 40px; margin-top: 32px; }
+  /* 4 itens: 3 colunas deixariam um orfao sozinho na segunda linha */
+  .benefits__grid { grid-template-columns: repeat(4, 1fr); gap: 44px 32px; margin-top: 32px; }
   .benefit h3 { font-size: 26px; }
   .benefit p  { font-size: 17px; }
   .benefits .cta-block { margin-top: 48px; }

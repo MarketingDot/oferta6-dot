@@ -22,13 +22,13 @@ python3 -m http.server 4321 --directory .
 ## V2 — as 4 telas, na ordem
 
 1. **Header + barra de countdown** — faixa de aviso, nav com o logo, barra com
-   DIA:HRS:MIN:SEG. Quando zera, troca para "Precisa de mais tempo? **Sim**" e o
-   botão devolve 15 minutos (o mesmo recurso da RYZE).
+   HRS:MIN:SEG. Contagem de sessão em **três estados**, como na RYZE — detalhe
+   na seção "Contador" abaixo.
 2. **Bloco da oferta** — título, galeria com 5 miniaturas, avaliação, nome do
    kit, 50 doses, especificações, caixa de brindes, preço, countdown, CTA,
    garantias e os 3 bullets que fecham o bloco.
 3. **Carrossel de brindes** — 3 cards. Carrossel no mobile, grid de 3 no desktop.
-4. **Benefícios** — 6 itens + CTA.
+4. **Benefícios** — 4 itens + CTA (2×2 no mobile, 4 colunas no desktop).
 
 Nada além disso: sem prova social, sem marquee, sem faixa de sabores.
 
@@ -99,24 +99,191 @@ A versão em uso é a **sem título**, porque o selo azul ao lado já diz
 
 ## Pendências (a página está no ar com elas)
 
-**1. Depoimentos / número de avaliações.** A V2 tem só 1 marcação laranja
-(`[N] avaliações` no card). Não inventei número:
+**1. Depoimentos.** ~~Número de avaliações~~ — resolvido: o card agora traz
+**4,5 estrelas** (4 cheias + `#i-star-half`, meia estrela feita com gradiente de
+50% sobre o mesmo path da estrela) e **"+30.000 Clientes Energizados"**, número
+dado pelo Dotinho. Não há mais nenhum `data-placeholder` na página.
 
-```bash
-grep -n 'data-placeholder' index.html
-```
+Falta ainda o bloco de depoimentos em si — a V2 não tem prova social, por
+decisão de escopo (só as 4 telas da RYZE).
 
 **2. Link do checkout.** `<a class="btn" href="#" id="checkoutBtn">` no card.
 
-**3. Prazo da oferta.** O contador zera às 23:59:59 de hoje. Para data fixa:
+**3. ~~Prazo da oferta~~** — resolvido: virou contagem de sessão de 7 minutos com
+prorrogação e estado final. Ver "Contador".
+
+**4. ~~Seleção de sabor~~** — resolvido: existem os dois seletores. Ver
+"Seletor de sabores".
+
+## Contador
+
+Três estados, na ordem em que o visitante os vê:
+
+| Estado | Classe no `<body>` | O que aparece |
+|---|---|---|
+| Rodando | *(nenhuma)* | HRS:MIN:SEG contando 7 minutos |
+| Expirado | `is-expired` | "Precisa de mais tempo? **Sim**" |
+| Reservado | `is-reserved` | "Oferta reservada" |
+
+Clicar em **Sim** devolve 5 minutos e volta ao estado "rodando". Quando esses
+5 minutos zeram, cai em "Oferta reservada" — e daí não sai. A prorrogação é
+**uma só**: o segundo clique é ignorado (`if (state.extended) return`).
+
+Os dois tempos vêm do HTML, não do JS:
 
 ```html
-<div class="salebar" id="salebar" data-deadline="2026-03-15T23:59:59-03:00">
+<div class="salebar" id="salebar" data-minutes="7" data-extra-minutes="5">
 ```
 
-**4. Seleção de sabor.** Ainda não existe seletor — a copy diz que os sabores são
-escolhidos na etapa seguinte. Quando quiser, dá pra montar dois seletores
-(Pouch 1 / Pouch 2) usando os ícones de sabor.
+O estado vive no **`sessionStorage`**, sob a chave `dot-oferta-timer`:
+
+```js
+{ deadline: 1788978276571, extended: false }
+```
+
+Sem essa persistência um F5 devolveria os 7 minutos e "Oferta reservada" nunca
+significaria nada — o visitante recarregaria de volta para o começo. Como é
+`sessionStorage` e não `localStorage`, **fechar a aba zera**: cada visita nova
+começa com 7 minutos limpos. Se você quiser que o estado gruda entre visitas,
+troque as duas chamadas em `v2.js` por `localStorage` — mas aí quem voltar dias
+depois cai direto em "Oferta reservada".
+
+O acesso está dentro de `try/catch` porque `sessionStorage` **lança exceção** em
+aba anônima e com cookies bloqueados. Nesse caso a página continua funcionando,
+só perde a memória entre recargas.
+
+Para testar sem esperar os 7 minutos, force o estado pelo console:
+
+```js
+// cai em "Precisa de mais tempo?"
+sessionStorage.setItem('dot-oferta-timer', JSON.stringify({deadline: Date.now()-1, extended: false}));
+// cai em "Oferta reservada"
+sessionStorage.setItem('dot-oferta-timer', JSON.stringify({deadline: Date.now()-1, extended: true}));
+location.reload();
+```
+
+## Popup de sabores
+
+Substituiu o seletor inline que existia dentro do card. Clicar em **Comprar
+agora** abre um popup de **3 etapas**:
+
+| # | Título | O que tem |
+|---|---|---|
+| 1 | Escolha seu 1º sabor | 4 pouches (`sabor-*.webp`) |
+| 2 | Escolha seu 2º sabor | os mesmos 4 |
+| 3 | Você ganhou os brindes! | os **3 brindes reais**, já marcados |
+
+### Rodapé
+
+O botão **Finalizar compra só aparece na etapa 3**. Nas etapas 1 e 2 o rodapé é
+a barra "Você já desbloqueou…", com os 3 brindes reais e **uma miniatura de cada
+vez**, revezando a cada 1,7s.
+
+O timer do rodízio só roda com a barra à vista — para na etapa 3 e ao fechar o
+popup. As 3 miniaturas lado a lado comiam 110px dos 345 do mobile e jogavam o
+texto para 4 linhas; uma de cada vez fecha em 2.
+
+> Como o botão sumiu das etapas 1 e 2, o único jeito de avançar nelas é escolher
+> um sabor ou arrastar.
+
+Escolher um sabor **avança sozinho** depois de 320ms — o atraso existe para o
+selo amarelo aparecer antes da tela trocar. A seta volta, a barra de 3 traços
+marca o progresso, e a seta some na etapa 1.
+
+As etapas ficam **lado a lado num trilho** e trocar de etapa é um `translateX`
+com transição de 380ms. Dá para **arrastar** entre elas — mouse ou dedo.
+
+Na etapa 3 os brindes ficam com o **mini pouch em cima, centralizado**, e o
+mousepad e o bloco embaixo (`.pick--wide` atravessa as duas colunas).
+
+A etapa 3 mostra o que a pessoa realmente ganha — Mousepad (R$ 35), Bloco de
+notas (R$ 45) e Mini pouch melancia (R$ 25), com as imagens `brinde-*.webp`.
+São 3, não 4: o mockup trazia "Apoio de Teclado" e "Frete Grátis", que não estão
+na oferta.
+
+### Detalhes que precisam continuar existindo
+
+O overlay é **na mão, não `<dialog>`** — o backdrop customizado do `<dialog>`
+ainda varia demais entre navegadores.
+
+**Abrir e fechar são animados** — o fundo esmaece e a folha sobe. Como não dá
+para animar a partir de `display: none`, o `hidden` sai primeiro, um reflow força
+o estado inicial e só então a classe `.is-open` entra. No fecho é o inverso: a
+classe sai, e o `hidden` só volta no `transitionend` — com um timer de 340ms de
+reserva, porque `transitionend` não dispara em aba de segundo plano nem com
+movimento reduzido.
+
+Quem tem `prefers-reduced-motion` não leva nem carrossel nem slide.
+
+### O arraste
+
+Gesto próprio com Pointer Events, **não o Swiper** que a página já carrega: aqui
+o avanço depende de o sabor estar escolhido, e mandar no `allowSlideNext` dele
+daria mais código que o gesto inteiro.
+
+Três detalhes que precisam continuar existindo:
+
+- **`touch-action: pan-y`** no trilho — sem isso o arraste horizontal briga com
+  a rolagem vertical da folha.
+- **Limiar de 8px e mais horizontal que vertical** antes de virar arraste, senão
+  ele rouba a rolagem.
+- **Clique cancelado** (`capture`) quando o gesto foi arraste, senão soltar em
+  cima de um cartão escolheria aquele sabor sem querer.
+
+Arrastar respeita o mesmo limite do botão: não passa de uma etapa que ainda não
+foi respondida, e o gesto ganha resistência de 25% na ponta para avisar disso.
+
+> **Os painéis usam `inert`, não `hidden`.** No trilho eles precisam continuar
+> ocupando coluna; `inert` tira do `Tab` e do leitor de tela sem tirar do layout.
+
+> **Os painéis têm `padding: 12px 14px 0`** e isso não é decoração: o selo de
+> check fica 9px fora do cartão. Sem a folga, o selo do painel vizinho vaza para
+> dentro da área visível e o da primeira linha é cortado pelo `overflow`.
+
+Como o popup cobre a página, ele carrega também o que um overlay precisa ter:
+
+- **`Escape` e clique no fundo fecham**, e o foco volta para quem o abriu.
+- **Foco preso** no `Tab`: sem isso ele passeia pela página atrás do overlay.
+- **`body { overflow: hidden }`** enquanto aberto, senão a página rola por baixo.
+
+Os inputs são radios de verdade em `<fieldset>`, fora da tela via `clip-path` —
+não `display: none`, senão perderiam o foco. O estado visual é a classe `.is-on`
+e o anel de foco é `.has-focus`, ambos postos pelo JS para não depender de
+`:has()`.
+
+### Como a escolha chega no checkout
+
+Igual ao seletor anterior — `data-pouch1`/`data-pouch2` no botão, e query string
+quando `data-checkout` tiver a URL real:
+
+```html
+<a class="btn" id="checkoutBtn" data-checkout="https://loja.exemplo.com/kit">
+```
+
+```
+https://loja.exemplo.com/kit?pouch1=menta&pouch2=melancia
+```
+
+> Enquanto não houver `data-checkout`, o botão **sempre** abre o popup. Quando a
+> URL entrar, ele passa direto para o checkout se os dois sabores já estiverem
+> escolhidos.
+
+### Quem abre o popup
+
+Os **dois** "Comprar agora" da página — o do card e o do fim da seção de
+benefícios. Marque com `data-open-flavors`:
+
+```html
+<a class="btn" href="#" id="checkoutBtn" data-open-flavors>
+<a class="btn" href="#oferta" data-open-flavors>
+```
+
+O atributo existe para não depender do `href`: o segundo botão é uma âncora
+(`#oferta`) e ficava de fora quando o seletor era `a.btn[href="#"]`.
+
+> O **Finalizar compra** da etapa 3 navega pela URL resolvida, e não por
+> `checkoutBtn.click()`. Aquele botão agora abre o popup, então clicar nele de
+> dentro do popup reabria tudo na etapa 1.
 
 ## Ícones
 

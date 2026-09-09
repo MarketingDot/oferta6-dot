@@ -19,6 +19,7 @@
   <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="m7.5 12.3 3 3 6-6.6" fill="none" stroke="#fefbe6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m0 0-6-6m6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9 2.9-6Z" fill="currentColor"/></symbol>
+  <symbol id="i-star-half" viewBox="0 0 24 24"><defs><linearGradient id="half-fill" x1="0" x2="1" y1="0" y2="0"><stop offset="50%" stop-color="currentColor"/><stop offset="50%" stop-color="currentColor" stop-opacity=".28"/></linearGradient></defs><path d="m12 2.5 2.9 6 6.6.9-4.8 4.6 1.2 6.5-5.9-3.1-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9 2.9-6Z" fill="url(#half-fill)"/></symbol>
   <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
   <symbol id="i-gift" viewBox="0 0 24 24"><path d="M3 9h18v3H3V9Zm1.5 3H19.5v9h-15v-9ZM12 9v12M12 9s-1.2-4-3.6-4A2 2 0 0 0 8 9h4Zm0 0s1.2-4 3.6-4A2 2 0 0 1 16 9h-4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="m12 2 2.1 5.9L20 10l-5.9 2.1L12 18l-2.1-5.9L4 10l5.9-2.1L12 2Z" fill="currentColor"/><path d="m19 15 .9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9.9-2.6Z" fill="currentColor"/></symbol>
@@ -42,16 +43,14 @@
   </div>
 </header>
 
-<!-- data-deadline: "end-of-day" ou uma data ISO, ex. 2026-03-15T23:59:59-03:00 -->
-<div class="salebar" id="salebar" data-deadline="end-of-day">
+<!-- data-minutes: duracao da contagem; data-extra-minutes: o que o botao "Sim" devolve -->
+<div class="salebar" id="salebar" data-minutes="7" data-extra-minutes="5">
   <div class="salebar__left">
     <span class="salebar__title">Dia do Consumidor</span>
     <span class="salebar__desc">30% OFF + 3 brindes</span>
   </div>
 
   <div class="timer" role="timer" aria-label="Tempo restante da oferta">
-    <div class="timer__unit"><span class="timer__num" data-t="d">00</span><span class="timer__lab">DIA</span></div>
-    <span class="timer__sep">:</span>
     <div class="timer__unit"><span class="timer__num" data-t="h">00</span><span class="timer__lab">HRS</span></div>
     <span class="timer__sep">:</span>
     <div class="timer__unit"><span class="timer__num" data-t="m">00</span><span class="timer__lab">MIN</span></div>
@@ -63,6 +62,8 @@
     <span class="more-time__label">Precisa de mais tempo?</span>
     <button class="more-time__btn" type="button" data-reset-timer>Sim</button>
   </div>
+
+  <div class="reserved">Oferta reservada</div>
 </div>
 
 <main>
@@ -155,10 +156,10 @@
         <div class="card">
 
           <div class="rating">
-            <span class="rating__stars" aria-hidden="true">
-              <svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star"/></svg>
+            <span class="rating__stars" role="img" aria-label="4,5 de 5 estrelas">
+              <svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star"/></svg><svg width="18" height="18"><use href="#i-star-half"/></svg>
             </span>
-            <span class="rating__count"><span data-placeholder>[N]</span> avaliações</span>
+            <span class="rating__count">+30.000 Clientes Energizados</span>
           </div>
 
           <div>
@@ -173,59 +174,53 @@
           </ul>
 
           <div class="gifts-box">
-            <div class="gifts-box__left">
-              <span class="tag">Brindes grátis</span>
-              <ul class="gift-list">
-                <li>
-                  <svg width="16" height="16" aria-hidden="true"><use href="#i-plus"/></svg>
-                  <span class="gift-list__name">Mousepad DOT</span>
-                  <span class="gift-list__was">R$ 35</span>
-                  <span class="free">Grátis</span>
-                </li>
-                <li>
-                  <svg width="16" height="16" aria-hidden="true"><use href="#i-plus"/></svg>
-                  <span class="gift-list__name">Bloco de notas</span>
-                  <span class="gift-list__was">R$ 45</span>
-                  <span class="free">Grátis</span>
-                </li>
-                <li>
-                  <svg width="16" height="16" aria-hidden="true"><use href="#i-plus"/></svg>
-                  <span class="gift-list__name">Mini pouch melancia</span>
-                  <span class="gift-list__was">R$ 25</span>
-                  <span class="free">Grátis</span>
-                </li>
-              </ul>
-            </div>
-            <div class="gifts-box__media">
-              <img src="assets/brindes-composicao-sem-titulo.webp" alt="Mousepad, caderno e 9 sachês de melancia inclusos no kit" loading="lazy">
-            </div>
+            <span class="tag">Brindes grátis</span>
+            <ul class="gift-list">
+              <li>
+                <img class="gift-list__img" src="assets/brinde-mousepad.webp" alt="Mousepad DOT" width="620" height="751" loading="lazy">
+                <span class="gift-list__name">Mousepad DOT</span>
+                <span class="gift-list__was">R$ 35</span>
+                <span class="free">Grátis</span>
+              </li>
+              <li>
+                <img class="gift-list__img" src="assets/brinde-bloco.webp" alt="Bloco de notas DOT" width="620" height="751" loading="lazy">
+                <span class="gift-list__name">Bloco de notas</span>
+                <span class="gift-list__was">R$ 45</span>
+                <span class="free">Grátis</span>
+              </li>
+              <li>
+                <img class="gift-list__img" src="assets/brinde-saches-melancia.webp" alt="Mini pouch DOT de melancia com limão" width="620" height="620" loading="lazy">
+                <span class="gift-list__name">Mini pouch melancia</span>
+                <span class="gift-list__was">R$ 25</span>
+                <span class="free">Grátis</span>
+              </li>
+            </ul>
           </div>
 
-          <div>
-            <p class="price__label">Dia do Consumidor</p>
-            <div class="price__row">
-              <span class="price__now">R$ 299,90</span>
-              <span class="price__was">R$ 429,98</span>
-              <span class="price__badge">30% OFF hoje</span>
-            </div>
+          <div class="price">
+            <p class="price__label">Valor promocional</p>
+            <span class="price__badge">30% OFF hoje</span>
+            <span class="price__now">R$ 299,90</span>
+            <span class="price__was">R$ 429,98</span>
             <p class="price__unit">R$ 5,99 por dose</p>
           </div>
 
           <div class="urgency">
             <svg width="18" height="18" aria-hidden="true"><use href="#i-bolt"/></svg>
-            <span class="urgency__time" id="timerInline">00:00:00:00</span>
+            <span class="urgency__time" id="timerInline">00:00:00</span>
             <span class="more-time">
               <span class="more-time__label">Precisa de mais tempo?</span>
               <button class="more-time__btn" type="button" data-reset-timer>Sim</button>
             </span>
+            <span class="reserved">Oferta reservada</span>
           </div>
 
-          <span class="autodiscount">Desconto aplicado automaticamente ✅</span>
-
-          <a class="btn" href="#" id="checkoutBtn">
+          <a class="btn" href="#" id="checkoutBtn" data-open-flavors>
             Comprar agora
             <svg width="22" height="22" aria-hidden="true"><use href="#i-arrow"/></svg>
           </a>
+
+          <span class="autodiscount">Desconto aplicado automaticamente ✅</span>
 
           <ul class="assurances">
             <li><svg width="18" height="18" aria-hidden="true"><use href="#i-check"/></svg>Economia de R$ 130,08 em relação ao preço avulso</li>
@@ -239,11 +234,11 @@
               <span>Escolha entre 4 sabores: menta, frutas vermelhas, citrus e melancia.</span>
             </li>
             <li class="bullet">
-              <svg width="36" height="36" aria-hidden="true"><use href="#i-bolt"/></svg>
+              <svg width="64" height="64" aria-hidden="true"><use href="#i-bolt"/></svg>
               <span>São 50 doses no total — 25 sachês em cada um dos 2 pouches.</span>
             </li>
             <li class="bullet">
-              <svg width="36" height="36" aria-hidden="true"><use href="#i-gift"/></svg>
+              <svg width="64" height="64" aria-hidden="true"><use href="#i-gift"/></svg>
               <span>Mousepad, bloco de notas e mini pouch de melancia vão de brinde.</span>
             </li>
           </ul>
@@ -349,19 +344,9 @@
         <p>Dissolve na boca e age sem precisar de água, gelo ou lata gelada.</p>
       </div>
       <div class="benefit">
-        <svg width="48" height="48" aria-hidden="true"><use href="#i-target"/></svg>
-        <h3>Foco afiado</h3>
-        <p>80mg de cafeína por sachê para segurar a atenção nas horas que importam.</p>
-      </div>
-      <div class="benefit">
         <svg width="48" height="48" aria-hidden="true"><use href="#i-nosugar"/></svg>
         <h3>Zero açúcar</h3>
         <p>Zero adição de açúcares. Toda a energia, sem o baque depois.</p>
-      </div>
-      <div class="benefit">
-        <svg width="48" height="48" aria-hidden="true"><use href="#i-vitamin"/></svg>
-        <h3>Vitaminas B6 e B12</h3>
-        <p>Participam do metabolismo que transforma o que você come em energia.</p>
       </div>
       <div class="benefit">
         <svg width="48" height="48" aria-hidden="true"><use href="#i-sparkle"/></svg>
@@ -373,10 +358,10 @@
         <h3>Cabe no bolso</h3>
         <p>Sachê de 1,2g com 2 pastilhas. Vai na carteira, na mochila, no bolso.</p>
       </div>
-    </div>
+</div>
 
     <div class="cta-block">
-      <a class="btn" href="#oferta">
+      <a class="btn" href="#oferta" data-open-flavors>
         Comprar agora
         <svg width="22" height="22" aria-hidden="true"><use href="#i-arrow"/></svg>
       </a>
@@ -390,6 +375,131 @@
 </section>
 
 </main>
+
+
+<!-- ================= POPUP DE SABORES ================= -->
+<div class="modal" id="flavorModal" hidden>
+  <div class="modal__backdrop" data-close></div>
+
+  <div class="modal__sheet" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <span class="modal__grip" aria-hidden="true"></span>
+
+    <div class="modal__head">
+      <button class="modal__back" type="button" data-back aria-label="Voltar para a etapa anterior">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12H5m0 0 6-6m-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h2 class="modal__title" id="modalTitle">Escolha seu 1º sabor</h2>
+      <button class="modal__close" type="button" data-close aria-label="Fechar">
+        <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="modal__steps" aria-hidden="true">
+      <span class="modal__step"></span><span class="modal__step"></span><span class="modal__step"></span>
+    </div>
+
+    <div class="modal__body">
+      <div class="modal__track" id="modalTrack">
+      <fieldset class="modal__panel" data-step="1">
+        <legend class="sr-only">Sabor do 1º pouch</legend>
+        <div class="pick-grid">
+          <label class="pick">
+            <input type="radio" name="pouch1" value="menta">
+            <span class="pick__media"><img src="assets/sabor-menta.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Menta</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <label class="pick">
+            <input type="radio" name="pouch1" value="frutas">
+            <span class="pick__media"><img src="assets/sabor-frutas.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Frutas Vermelhas</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <label class="pick">
+            <input type="radio" name="pouch1" value="melancia">
+            <span class="pick__media"><img src="assets/sabor-melancia.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Melancia com Limão</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <label class="pick">
+            <input type="radio" name="pouch1" value="citrus">
+            <span class="pick__media"><img src="assets/sabor-citrus.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Citrus</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+        </div>
+      </fieldset>
+
+      <fieldset class="modal__panel" data-step="2" inert aria-hidden="true">
+        <legend class="sr-only">Sabor do 2º pouch</legend>
+        <div class="pick-grid">
+          <label class="pick">
+            <input type="radio" name="pouch2" value="menta">
+            <span class="pick__media"><img src="assets/sabor-menta.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Menta</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <label class="pick">
+            <input type="radio" name="pouch2" value="frutas">
+            <span class="pick__media"><img src="assets/sabor-frutas.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Frutas Vermelhas</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <label class="pick">
+            <input type="radio" name="pouch2" value="melancia">
+            <span class="pick__media"><img src="assets/sabor-melancia.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Melancia com Limão</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+          <label class="pick">
+            <input type="radio" name="pouch2" value="citrus">
+            <span class="pick__media"><img src="assets/sabor-citrus.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Citrus</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="modal__panel" data-step="3" inert aria-hidden="true">
+        <div class="pick-grid pick-grid--gifts">
+          <div class="pick is-won pick--wide">
+            <span class="pick__media"><img src="assets/brinde-saches-melancia.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Mini Pouch Melancia</span>
+            <span class="pick__value">Vale R$ 25</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="pick is-won">
+            <span class="pick__media"><img src="assets/brinde-mousepad.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Mousepad DOT</span>
+            <span class="pick__value">Vale R$ 35</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="pick is-won">
+            <span class="pick__media"><img src="assets/brinde-bloco.webp" alt="" loading="lazy"></span>
+            <span class="pick__name">Bloco de Notas</span>
+            <span class="pick__value">Vale R$ 45</span>
+            <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+
+    <div class="unlocked" id="modalUnlocked">
+      <p class="unlocked__text">Você já desbloqueou: <strong>Mousepad DOT</strong>, <strong>Bloco de Notas</strong> e <strong>Mini Pouch Melancia</strong></p>
+      <span class="unlocked__media" aria-hidden="true">
+        <img src="assets/brinde-mousepad.webp" alt="" loading="lazy">
+        <img src="assets/brinde-bloco.webp" alt="" loading="lazy">
+        <img src="assets/brinde-saches-melancia.webp" alt="" loading="lazy">
+      </span>
+    </div>
+
+    <button class="btn modal__cta" type="button" id="modalCta" hidden>
+      Finalizar compra
+      <svg width="22" height="22" aria-hidden="true"><use href="#i-arrow"/></svg>
+    </button>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js"></script>
 <script src="v2.js"></script>
