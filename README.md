@@ -3,10 +3,15 @@
 Página de oferta com a estrutura da `shop.ryzesuperfoods.com/fbo/ritual-set`,
 adaptada para a identidade e a oferta da DOT.
 
-| Versão | Arquivo | URL local | O que é |
+**No ar:** https://oferta6-dot.vercel.app
+**Repo:** https://github.com/MarketingDot/oferta6-dot
+
+| Versão | Arquivo | Rota | O que é |
 |---|---|---|---|
-| **V2 (atual)** | `v2.html` · `v2.css` · `v2.js` | `/v2.html` | Só as 4 telas da referência, na ordem da RYZE |
-| V1 | `index.html` · `styles.css` · `script.js` | `/` | Primeira versão, com prova social, marquee e faixa de sabores |
+| **V2 (atual)** | `index.html` · `v2.css` · `v2.js` | `/` | Só as 4 telas da referência, na ordem da RYZE |
+| V1 | `v1.html` · `styles.css` · `script.js` | `/v1.html` | Primeira versão, com prova social, marquee e faixa de sabores |
+
+Push na `main` publica sozinho — o repo está conectado ao projeto na Vercel.
 
 ## Rodar localmente
 
@@ -44,14 +49,31 @@ Os 4 sabores foram **normalizados**: recortados no conteúdo real, escalados par
 a mesma altura de pouch (1210px) e centralizados no mesmo canvas (900×1300).
 Por isso saem exatamente do mesmo tamanho quando ficam lado a lado.
 
+Duas pastas, de propósito:
+
+| | |
+|---|---|
+| `assets/` | **WebP** redimensionado para o uso real. É o que vai para o ar. |
+| `assets-src/` | Os **PNG** de origem, em alta. Commitados, mas excluídos do deploy pelo `.vercelignore`. |
+
+Vários arquivos de `assets-src/` não existem em nenhum outro lugar — os
+`sabor-*.png` normalizados, o `brinde-saches-melancia.png` montado a partir do
+sachê isolado, o `icone-pouch.png` com o traço engrossado e o
+`brindes-composicao-sem-titulo.png` com o xadrez recortado. Não apague.
+
+A conversão levou os assets de **24MB para 1,1MB** (−95%), com a página inteira
+fechando em **~720KB**. Cada imagem foi reduzida para 2× do maior tamanho em que
+ela realmente aparece: `textura-navy` para 1400px, os pouches e brindes para
+620px, a composição de brindes para 480px, o logo para 240px.
+
+Para regerar depois de trocar algum PNG em `assets-src/`:
+
+```python
+im.save(f"assets/{nome}.webp", "WEBP", quality=82, method=6)
 ```
-assets/sabor-menta.png      assets/sabor-frutas.png
-assets/sabor-citrus.png     assets/sabor-melancia.png
-assets/brinde-mousepad.png  assets/brinde-bloco.png
-assets/brinde-saches-melancia.png
-assets/brindes-composicao-sem-titulo.png   ← em uso na caixa de brindes do card
-assets/brindes-composicao.png              ← mesma imagem, com o título "BRINDES GRÁTIS"
-```
+
+> As referências no HTML e no CSS apontam para `.webp`. Se você trocar uma
+> imagem, mantenha a extensão ou atualize as referências junto.
 
 A composição dos 3 brindes veio em **RGB com o xadrez de transparência pintado
 nos pixels**. O fundo foi recortado com flood fill a partir das bordas — por ser
@@ -60,9 +82,7 @@ teria apagado junto. Depois foi reduzida para 620px (de 2,2MB para ~380KB).
 
 A versão em uso é a **sem título**, porque o selo azul ao lado já diz
 "BRINDES GRÁTIS" e a imagem original repetia. Para voltar à outra, troque o
-`src` na linha 201 do `v2.html`.
-
-`assets-v2-preview.png` na raiz é uma folha de conferência dessas imagens.
+`src` da caixa de brindes no `index.html`.
 
 > **`brinde-saches-melancia.png`** foi **montado por mim** a partir do sachê
 > isolado do brand folder (9 cópias em lattice diagonal), porque a foto original
@@ -74,16 +94,16 @@ A versão em uso é a **sem título**, porque o selo azul ao lado já diz
 > aqui, e leva um tempo até você desconfiar que o problema é cache e não o build.
 >
 > ```bash
-> grep -rn 'brinde-saches-melancia' v2.html index.html
+> grep -rn 'brinde-saches-melancia' index.html v1.html
 > ```
 
-## Pendências antes de publicar
+## Pendências (a página está no ar com elas)
 
 **1. Depoimentos / número de avaliações.** A V2 tem só 1 marcação laranja
 (`[N] avaliações` no card). Não inventei número:
 
 ```bash
-grep -n 'data-placeholder' v2.html
+grep -n 'data-placeholder' index.html
 ```
 
 **2. Link do checkout.** `<a class="btn" href="#" id="checkoutBtn">` no card.
@@ -100,7 +120,7 @@ escolhidos na etapa seguinte. Quando quiser, dá pra montar dois seletores
 
 ## Ícones
 
-Todos são SVG inline, num sprite no topo do `v2.html`. O raio (`#i-bolt`) é o
+Todos são SVG inline, num sprite no topo do `index.html`. O raio (`#i-bolt`) é o
 **`fi-br-bolt` do Flaticon UIcons**, extraído do glifo U+F1F9 da fonte
 `uicons-bold-rounded` e convertido em path — mesmo desenho, sem carregar a fonte.
 Conferido contra o original: **97% de sobreposição de pixel** (o resto é
@@ -119,7 +139,7 @@ Vale a pena se você for usar vários UIcons na página.
 > O plano gratuito do Flaticon exige atribuição. Se a DOT tem assinatura paga,
 > não tem o que fazer; se não tem, vale confirmar antes de publicar.
 
-A exceção é `assets/icone-pouch.png`, no bullet dos 4 sabores: é a ilustração da
+A exceção é `assets/icone-pouch.webp`, no bullet dos 4 sabores: é a ilustração da
 embalagem, não um ícone do sprite. O desenho original tinha traço de 20px numa
 arte de 1117px de altura — a 36px isso vira 0,6px e some. O traço foi engrossado
 por dilatação da máscara **antes** de reduzir e recolorido para `#0f2d72`, o mesmo
