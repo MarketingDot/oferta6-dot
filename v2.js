@@ -126,10 +126,16 @@
 
       // o botao de finalizar so existe na etapa dos brindes; antes dela o
       // rodape mostra o que ja esta garantido
-      cta.hidden = etapa < 3;
+      // is-off usa visibility: mantem o elemento ocupando a celula do
+      // rodape, para a altura do popup nao mudar entre as 3 telas
+      cta.classList.toggle('is-off', etapa < 3);
+      cta.inert = etapa < 3;
+
       if (unlocked) {
-        unlocked.hidden = etapa === 3;
-        if (unlocked.hidden) desligaGiro(); else ligaGiro();
+        var escondida = etapa === 3;
+        unlocked.classList.toggle('is-off', escondida);
+        unlocked.inert = escondida;
+        if (escondida) desligaGiro(); else ligaGiro();
       }
 
       desliza();

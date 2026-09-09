@@ -179,6 +179,16 @@ O botão **Finalizar compra só aparece na etapa 3**. Nas etapas 1 e 2 o rodapé
 a barra "Você já desbloqueou…", com os 3 brindes reais e **uma miniatura de cada
 vez**, revezando a cada 1,7s.
 
+As 3 telas têm **a mesma altura**. Barra e botão ficam na **mesma célula** de
+grade (`.modal__foot`), então o rodapé mede sempre o mais alto dos dois e o
+popup não muda de tamanho ao trocar de etapa. Por isso a troca é por
+`visibility` (classe `.is-off`) e **não** por `hidden`/`display: none` — um
+`display: none` sairia do cálculo da célula e a altura voltaria a variar. O
+`inert` acompanha, para o elemento invisível não receber foco.
+
+O trilho usa `align-items: stretch` pelo mesmo motivo: sem isso o painel dos
+brindes ficava 55px mais alto que os de sabor.
+
 O timer do rodízio só roda com a barra à vista — para na etapa 3 e ao fechar o
 popup. As 3 miniaturas lado a lado comiam 110px dos 345 do mobile e jogavam o
 texto para 4 linhas; uma de cada vez fecha em 2.

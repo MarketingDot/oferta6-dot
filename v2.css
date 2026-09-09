@@ -503,7 +503,7 @@ button { font: inherit; color: inherit; }
 .modal__body  { overflow: hidden; }
 .modal__track {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   touch-action: pan-y;
   transition: transform .38s cubic-bezier(.22, .61, .36, 1);
 }
@@ -550,6 +550,14 @@ button { font: inherit; color: inherit; }
 
 /* rodape das etapas 1 e 2: mostra o que ja esta garantido enquanto o
    botao de finalizar ainda nao aparece (ele so entra na etapa 3) */
+/* barra e botao ocupam a MESMA celula da grade: o rodape passa a medir
+   sempre o mais alto dos dois, entao as 3 telas tem a mesma altura.
+   Por isso a troca e por visibility, e nao por hidden/display -- um
+   display:none sairia do calculo da celula e a altura voltaria a variar. */
+.modal__foot { display: grid; }
+.modal__foot > * { grid-area: 1 / 1; align-self: center; }
+.is-off { visibility: hidden; }
+
 .unlocked {
   display: flex; align-items: center; gap: 12px;
   padding: 14px 16px;
@@ -557,7 +565,6 @@ button { font: inherit; color: inherit; }
   border-radius: 14px;
   background: rgba(15, 45, 114, .06);
 }
-.unlocked[hidden] { display: none; }
 
 .unlocked__text {
   flex: 1; min-width: 0; margin: 0;
@@ -580,7 +587,6 @@ button { font: inherit; color: inherit; }
 .unlocked__media img.is-on { opacity: 1; transform: none; }
 
 .modal__cta { width: 100%; }
-.modal__cta[hidden] { display: none; }
 
 @media (min-width: 992px) {
   .unlocked__text { font-size: 15px; }
