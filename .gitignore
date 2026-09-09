@@ -1,0 +1,7 @@
+.vercel
+.DS_Store
+node_modules
+_pdf*
+*.pdf
+assets-v2-preview.png
+bolt-preview.png

@@ -1,0 +1,608 @@
+/* ============================================================
+   DOT ENERGY — Oferta Dia do Consumidor · V2
+   Segue a estrutura da RYZE Ritual Set em 4 blocos:
+   header+countdown → oferta (título+galeria+card+bullets)
+   → carrossel de brindes → benefícios.
+   Breakpoint único: 992px.
+   ============================================================ */
+
+:root {
+  --navy:   #04142f;
+  --blue:   #0f2d72;
+  --yellow: #fceb2e;
+  --cream:  #fefbe6;
+  --gray:   #797777;
+
+  --cream-2:    #f9f3da;              /* fundo do bloco de oferta */
+  --cream-card: #fffdf1;              /* cards */
+  --navy-08:    rgba(4, 20, 47, .08);
+  --navy-14:    rgba(4, 20, 47, .14);
+  --cream-70:   rgba(254, 251, 230, .70);
+
+  --nav-h:       70px;
+  --bar-h:       48px;
+  --gutter:      20px;
+  --container:   1360px;
+  --section-pad: 32px;
+  --radius:      16px;
+  --radius-sm:   8px;
+}
+
+@media (min-width: 992px) {
+  :root { --nav-h: 92px; --bar-h: 60px; --gutter: 40px; --section-pad: 48px; }
+}
+
+@media (max-width: 479px) {
+  :root { --gutter: 15px; }
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  padding-top: calc(var(--nav-h) + var(--bar-h));
+  background: var(--cream);
+  color: var(--navy);
+  font-family: "Space Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -.01em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+@media (min-width: 992px) { body { font-size: 18px; } }
+
+img { display: block; max-width: 100%; height: auto; }
+ul  { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; }
+
+.container { width: 100%; max-width: var(--container); margin-inline: auto; padding-inline: var(--gutter); }
+.section   { padding: var(--section-pad) 0; }
+
+/* Sangra o carrossel até a borda da tela (o .negative-swiper da RYZE) */
+.bleed       { margin-inline: calc(var(--gutter) * -1); }
+.slider-clip { overflow: hidden; }
+
+/* ---------- Tipografia ---------- */
+.eyebrow {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+  color: var(--blue);
+}
+
+.h1, .h2 { margin: 0; font-weight: 700; line-height: 1.1; letter-spacing: -.02em; }
+/* Em caixa alta o tracking negativo aperta demais — afrouxa um pouco */
+.h1 {
+  font-size: clamp(1.9rem, 6.8vw, 3.5rem);
+  letter-spacing: -.01em;
+  text-transform: uppercase;
+}
+.h2 { font-size: clamp(1.9rem, 6vw, 3rem); }
+
+.lead { margin: 0; font-size: 1rem; line-height: 1.5; }
+.hl   { color: var(--blue); }
+
+@media (min-width: 992px) {
+  .eyebrow { font-size: 22px; }
+  .lead    { font-size: 1.125rem; }
+}
+
+/* Molduras de imagem: a caixa manda na proporção, a imagem é absoluta.
+   Nunca usar max-height:100% em imagem dentro de pai com aspect-ratio. */
+.media-frame { position: relative; overflow: hidden; }
+
+.media-frame > img {
+  position: absolute;
+  inset: var(--frame-pad, 16px);
+  width:  calc(100% - var(--frame-pad, 16px) * 2);
+  height: calc(100% - var(--frame-pad, 16px) * 2);
+  object-fit: contain;
+}
+
+/* ---------- Botão ---------- */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 63px;
+  padding: 16px 28px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--yellow);
+  color: var(--navy);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 4px 0 0 var(--navy);
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+
+.btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 0 0 var(--navy); }
+.btn:active { transform: translateY(3px); box-shadow: 0 1px 0 0 var(--navy); }
+.btn svg    { flex: none; }
+
+@media (min-width: 992px) { .btn { min-height: 72px; font-size: 20px; } }
+
+.cta-block { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+
+.cta-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.cta-note svg { flex: none; color: var(--blue); }
+
+/* ============================================================
+   1 · HEADER + BARRA DE COUNTDOWN
+   ============================================================ */
+.navbar { position: fixed; inset: 0 0 auto 0; z-index: 9999; }
+
+.announce {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 22px;
+  background: var(--yellow);
+  color: var(--navy);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 48px;
+  padding-inline: var(--gutter);
+  background: var(--navy);
+}
+
+.nav-row button { display: grid; place-items: center; width: 32px; height: 32px; background: none; border: 0; color: var(--cream); cursor: pointer; }
+.nav-logo { height: 26px; width: auto; }
+
+@media (min-width: 992px) {
+  .announce { height: 28px; font-size: 13px; }
+  .nav-row  { height: 64px; }
+  .nav-logo { height: 34px; }
+}
+
+.salebar {
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  height: var(--bar-h);
+  padding-inline: var(--gutter);
+  background: linear-gradient(119deg, var(--navy), var(--blue));
+  color: var(--cream);
+}
+
+.salebar__left  { display: flex; flex-direction: column; line-height: 1.15; }
+.salebar__title { font-size: 15px; font-weight: 700; letter-spacing: .02em; text-transform: uppercase; }
+.salebar__desc  { font-size: 10px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; color: var(--cream-70); }
+
+.timer      { display: flex; align-items: flex-start; gap: 6px; }
+.timer__unit{ display: flex; flex-direction: column; align-items: center; min-width: 30px; }
+.timer__num { font-size: 18px; font-weight: 700; line-height: 1; color: var(--yellow); font-variant-numeric: tabular-nums; }
+.timer__lab { font-size: 9px; font-weight: 500; letter-spacing: .08em; color: var(--cream-70); }
+.timer__sep { font-size: 16px; font-weight: 700; line-height: 1.1; color: var(--yellow); opacity: .45; }
+
+/* Estado "expirado" — a RYZE mostra MAIS TEMPO? / Sim por cima do contador */
+.more-time { display: none; align-items: center; gap: 10px; }
+.more-time__label { font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; }
+
+.more-time__btn {
+  padding: 5px 18px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--yellow);
+  color: var(--navy);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.is-expired .timer     { display: none; }
+.is-expired .more-time { display: flex; }
+
+@media (min-width: 992px) {
+  .salebar { gap: 28px; }
+  .salebar__title { font-size: 18px; }
+  .salebar__desc  { font-size: 12px; }
+  .timer__num { font-size: 22px; }
+}
+
+/* ============================================================
+   2 · BLOCO DA OFERTA
+   ============================================================ */
+.offer { background: var(--cream-2); }
+
+.offer__head { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; margin-bottom: 24px; }
+
+.offer__layout { display: flex; flex-direction: column; gap: 24px; }
+
+/* --- Galeria --- */
+.gallery__main { position: relative; width: 100%; border-radius: var(--radius); overflow: hidden; }
+
+/* Setas de navegação, como na galeria da RYZE */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--cream);
+  color: var(--navy);
+  box-shadow: 0 2px 10px rgba(4, 20, 47, .3);
+  cursor: pointer;
+  transition: opacity .18s ease, transform .18s ease;
+}
+
+.nav-arrow:hover { transform: translateY(-50%) scale(1.06); }
+.nav-arrow--prev { left: 10px; }
+.nav-arrow--next { right: 10px; }
+.nav-arrow.swiper-button-disabled { opacity: .3; cursor: default; }
+.nav-arrow.swiper-button-disabled:hover { transform: translateY(-50%); }
+
+@media (min-width: 992px) {
+  .nav-arrow { width: 48px; height: 48px; }
+  .nav-arrow--prev { left: 16px; }
+  .nav-arrow--next { right: 16px; }
+}
+
+.gallery__slide {
+  --frame-pad: 22px;
+  aspect-ratio: 1 / 1;
+  background: var(--navy) url("assets/textura-navy.webp") center/cover;
+}
+
+.gallery__slide > img { filter: drop-shadow(0 16px 24px rgba(0,0,0,.4)); }
+
+/* Composições montadas em CSS dentro da lâmina */
+.compo { position: absolute; inset: var(--frame-pad); display: flex; align-items: center; justify-content: center; gap: 2%; }
+.compo img { flex: 0 1 auto; max-height: 100%; width: auto; filter: drop-shadow(0 14px 20px rgba(0,0,0,.42)); }
+
+/* Kit: 2 pouches na frente, brindes menores embaixo */
+.compo--kit { display: block; }
+.compo--kit img { position: absolute; }
+.compo--kit .c-pouch-a { width: 42%; left: 6%;  top: 2%;  transform: rotate(-7deg); }
+.compo--kit .c-pouch-b { width: 42%; right: 6%; top: 2%;  transform: rotate(7deg); }
+.compo--kit .c-pad     { width: 30%; left: 2%;  bottom: 1%; transform: rotate(-6deg); }
+.compo--kit .c-bloco   { width: 26%; right: 3%; bottom: 2%; transform: rotate(6deg); }
+.compo--kit .c-mini    { width: 40%; left: 30%; bottom: -1%; }
+
+/* Sabores: 4 colunas de largura idêntica. Como os 4 PNGs foram
+   normalizados no mesmo canvas (900×1300) com a mesma altura de pouch,
+   colunas iguais garantem que os 4 saiam exatamente do mesmo tamanho. */
+.compo--sabores {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2%;
+  align-content: center;
+}
+
+.compo--sabores figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; min-width: 0; }
+.compo--sabores img { width: 100%; height: auto; filter: drop-shadow(0 12px 18px rgba(0,0,0,.42)); }
+
+.compo--sabores figcaption {
+  font-size: clamp(7px, 1.9vw, 14px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--cream);
+}
+
+.gallery__thumbs .compo--sabores figcaption { display: none; }
+
+.gallery__thumbs { margin-top: 8px; }
+
+.gallery__thumbs .swiper-slide {
+  aspect-ratio: 1 / 1;
+  border: 2px solid transparent;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  opacity: .5;
+  cursor: pointer;
+  transition: opacity .2s ease, border-color .2s ease;
+}
+
+.gallery__thumbs .swiper-slide-thumb-active { opacity: 1; border-color: var(--blue); }
+.gallery__thumbs .gallery__slide { --frame-pad: 5px; }
+.gallery__thumbs .compo { inset: 5px; }
+
+/* --- Card --- */
+.card { display: flex; flex-direction: column; gap: 16px; }
+
+.rating { display: flex; align-items: center; gap: 8px; }
+.rating__stars { display: flex; gap: 2px; color: var(--blue); }
+.rating__count { font-size: 15px; font-weight: 500; }
+
+.card__title { margin: 0; font-size: clamp(1.75rem, 6.4vw, 2.25rem); font-weight: 700; line-height: 1.1; letter-spacing: -.02em; }
+.card__doses { margin: 0; font-size: 20px; font-weight: 700; color: var(--blue); }
+
+.specs { display: flex; flex-direction: column; gap: 7px; }
+.specs li { display: flex; align-items: flex-start; gap: 10px; font-size: 16px; line-height: 1.3; }
+.specs svg { flex: none; margin-top: 3px; color: var(--blue); }
+
+/* Brindes dentro do card */
+.gifts-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px dashed var(--navy-14);
+  border-radius: var(--radius);
+  background: var(--cream-card);
+}
+
+.gifts-box__left { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; }
+
+.tag {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 4px;
+  background: var(--blue);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.gift-list { display: flex; flex-direction: column; gap: 9px; }
+.gift-list li { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.25; }
+.gift-list svg { flex: none; color: var(--blue); }
+.gift-list__name { flex: 1; min-width: 0; }
+.gift-list__was  { flex: none; white-space: nowrap; color: var(--gray); text-decoration: line-through; }
+
+.free {
+  flex: none;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: var(--yellow);
+  color: var(--navy);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.gifts-box__media { flex: none; width: 112px; }
+
+/* Preço */
+.price__label { font-size: 18px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: var(--blue); }
+.price__row   { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin-top: 2px; }
+.price__now   { font-size: clamp(2rem, 8.6vw, 2.5rem); font-weight: 700; letter-spacing: -.02em; }
+.price__was   { font-size: clamp(1.5rem, 6.4vw, 2rem); font-weight: 500; color: var(--gray); text-decoration: line-through; }
+
+.price__badge {
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--blue);
+  color: var(--cream);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.price__unit { margin-top: 2px; font-size: 17px; font-weight: 500; color: var(--blue); }
+
+.urgency {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(15, 45, 114, .07);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--blue);
+  font-variant-numeric: tabular-nums;
+}
+
+.urgency .more-time__label { color: var(--blue); }
+.urgency .more-time__btn   { background: var(--blue); color: var(--cream); }
+.is-expired .urgency__time { display: none; }
+.is-expired .urgency .more-time { display: flex; }
+
+.autodiscount {
+  align-self: center;
+  padding: 4px 12px;
+  border-radius: 4px;
+  background: var(--yellow);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.assurances { display: flex; flex-direction: column; gap: 6px; }
+.assurances li { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.assurances svg { flex: none; color: var(--blue); }
+
+/* Os 3 bullets que fecham o bloco, como na RYZE */
+.bullets { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+.bullet  { display: flex; align-items: flex-start; gap: 14px; }
+.bullet svg { flex: none; color: var(--blue); }
+
+/* O ícone da embalagem é a ilustração original, não um SVG do sprite */
+.bullet__icon { flex: none; width: auto; height: 36px; }
+.bullet span { font-size: 17px; font-weight: 500; line-height: 1.35; }
+
+@media (min-width: 992px) {
+  .offer__head   { margin-bottom: 32px; }
+  .offer__layout { flex-direction: row; align-items: flex-start; gap: 64px; }
+  .offer__gallery{ flex: 0 0 49%; min-width: 0; position: sticky; top: calc(var(--nav-h) + 20px); }
+  .offer__card   { flex: 1; min-width: 0; }
+  .card { gap: 20px; }
+  .gifts-box__media { width: 180px; }
+  .gift-list li { font-size: 16px; }
+  .bullet span { font-size: 18px; }
+}
+
+@media (max-width: 400px) {
+  .gifts-box { gap: 8px; padding: 14px; }
+  .gifts-box__media { width: 92px; }
+  .gift-list li { font-size: 14px; gap: 6px; }
+}
+
+/* ============================================================
+   3 · CARROSSEL DE BRINDES
+   ============================================================ */
+.gifts { background: var(--cream); }
+
+.gifts__head { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; margin-bottom: 20px; }
+
+.gift-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--cream-card);
+  border: 1px solid var(--navy-08);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.gift-card__media {
+  --frame-pad: 18px;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(180deg, rgba(15,45,114,.06), rgba(15,45,114,0));
+}
+
+.gift-card__body  { display: flex; flex-direction: column; gap: 6px; padding: 0 16px 20px; text-align: center; }
+/* Caixa alta pede um pouco de tracking, senão as letras grudam */
+.gift-card__title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: .02em;
+  text-transform: uppercase;
+}
+.gift-card__text  { margin: 0; font-size: 15px; line-height: 1.4; }
+
+.gift-card__value {
+  align-self: center;
+  margin-top: 4px;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: var(--yellow);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+}
+
+.gifts__grid   { display: none; }
+.gifts__slider { display: block; }
+
+@media (min-width: 992px) {
+  .gifts__head   { margin-bottom: 28px; }
+  .gifts__grid   { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .gifts__slider { display: none; }
+  .gift-card__title { font-size: 24px; }
+  .gift-card__text  { font-size: 17px; }
+}
+
+/* ============================================================
+   4 · BENEFÍCIOS
+   ============================================================ */
+.benefits { background: #f6f2e2; }
+
+.benefits__head { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; }
+.benefits__head .lead { max-width: 780px; }
+
+.benefits__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 16px; margin-top: 24px; }
+
+.benefit { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.benefit svg { color: var(--blue); }
+.benefit h3 { margin: 0; font-size: 20px; font-weight: 700; line-height: 1.15; }
+.benefit p  { margin: 0; font-size: 15px; line-height: 1.35; }
+
+.benefits .cta-block { margin-top: 32px; }
+
+@media (min-width: 992px) {
+  .benefits__grid { grid-template-columns: repeat(3, 1fr); gap: 44px 40px; margin-top: 32px; }
+  .benefit h3 { font-size: 26px; }
+  .benefit p  { font-size: 17px; }
+  .benefits .cta-block { margin-top: 48px; }
+  .benefits .btn { min-width: 420px; width: auto; }
+}
+
+/* ============================================================
+   SWIPER
+   ============================================================ */
+.slider-clip .swiper { overflow: visible; }
+.swiper-wrapper { align-items: stretch; }
+.swiper-slide   { height: auto; }
+
+/* Sem isso o navegador inicia o arraste nativo da imagem quando você
+   pressiona e puxa o mouse — e o swipe do carrossel nunca acontece. */
+.swiper, .swiper img, .swiper figure {
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.swiper img { pointer-events: none; }
+
+.dots { display: flex; justify-content: center; gap: 4px; margin-top: 16px; }
+
+/* O bullet fica com 8px visíveis mas 28px de área de toque */
+.dots .swiper-pagination-bullet {
+  width: 28px; height: 28px;
+  margin: 0 !important;
+  border-radius: 50%;
+  background: none;
+  opacity: 1;
+  position: relative;
+  cursor: pointer;
+}
+
+.dots .swiper-pagination-bullet::after {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: var(--navy);
+  opacity: .17;
+  transition: opacity .2s ease, background .2s ease;
+}
+
+.dots .swiper-pagination-bullet-active::after { opacity: 1; background: var(--blue); }
+
+/* ---------- Conteúdo pendente do cliente ---------- */
+[data-placeholder] {
+  outline: 2px dashed #e0761b;
+  outline-offset: 2px;
+  border-radius: 3px;
+  background: rgba(224, 118, 27, .10);
+}

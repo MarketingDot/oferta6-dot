@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "oferta-dot",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4321", "--directory", "/Users/cauecaks/vercel/oferta-dia-do-consumidor"],
+      "port": 4321
+    }
+  ]
+}
