@@ -116,9 +116,11 @@ prorrogação e estado final. Ver "Contador".
 **4. ~~Seleção de sabor~~** — resolvido: existem os dois seletores. Ver
 "Seletor de sabores".
 
-## Bloco "Seu kit"
+## Bloco "Brindes grátis"
 
-A caixa tracejada do card detalha a oferta item a item, com **um título azul só**:
+A caixa tracejada do card detalha a oferta item a item, sob um único título
+azul. O primeiro pouch usa o `sabor-menta` (azul) e o segundo o `sabor-frutas`
+(rosa), para os dois não saírem iguais:
 
 | Item | De | Por |
 |---|---|---|
