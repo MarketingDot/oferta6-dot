@@ -138,9 +138,16 @@ não podem ser mexidos isoladamente:
 2 × 149,95                 = 299,90   ← o "por" da oferta
 ```
 
-Um fio tracejado (`.gift-list__sep`) separa o que é pago do que é brinde. O
-preço com desconto usa `.now` em azul, não o amarelo do `.free`: sobre o creme
+O rótulo **BRINDES GRÁTIS** fica **entre as duas listas**, não no topo do bloco:
+ele titula só as três linhas que são de fato grátis, e os pouches ficam acima
+sem rótulo. É ele que separa o pago do gratuito — não há mais fio.
+
+O preço com desconto usa `.now` em azul, não o amarelo do `.free`: sobre o creme
 o destaque é sempre azul, e o amarelo fica reservado para o que não se paga.
+
+> A lista `.specs` que ficava acima do bloco (2× pouch, 4 sabores, 80mg) foi
+> removida: o bloco já mostra os 2 pouches e os bullets do rodapé já dizem os
+> sabores e as 50 doses.
 
 ## Contador
 
