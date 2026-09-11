@@ -255,6 +255,10 @@ button { font: inherit; color: inherit; }
 
 .offer__head { display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center; margin-bottom: 24px; }
 
+/* subtitulo com a economia: o valor em azul, como o .hl do titulo */
+.offer__sub { margin: 4px 0 0; font-size: clamp(1.125rem, 4.8vw, 1.5rem); font-weight: 500; line-height: 1.25; }
+.offer__sub strong { font-weight: 700; color: var(--blue); }
+
 .offer__layout { display: flex; flex-direction: column; gap: 24px; }
 
 /* --- Galeria --- */

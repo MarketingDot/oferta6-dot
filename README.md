@@ -24,9 +24,9 @@ python3 -m http.server 4321 --directory .
 1. **Header + barra de countdown** — faixa de aviso, nav com o logo, barra com
    HRS:MIN:SEG. Contagem de sessão em **três estados**, como na RYZE — detalhe
    na seção "Contador" abaixo.
-2. **Bloco da oferta** — título, galeria com 5 miniaturas, avaliação, nome do
-   kit, 50 doses, especificações, caixa de brindes, preço, countdown, CTA,
-   garantias e os 3 bullets que fecham o bloco.
+2. **Bloco da oferta** — título, subtítulo com a economia, galeria com 5
+   miniaturas, avaliação, nome do kit, "50 doses + 3 brindes GRÁTIS", caixa de
+   brindes, preço, countdown, CTA, garantias e os 3 bullets que fecham o bloco.
 3. **Carrossel de brindes** — 3 cards. Carrossel no mobile, grid de 3 no desktop.
 4. **Benefícios** — 4 itens + CTA (2×2 no mobile, 4 colunas no desktop).
 
@@ -38,7 +38,7 @@ Nada além disso: sem prova social, sem marquee, sem faixa de sabores.
 |---|---|
 | Produto | 2× Pouch de 25 sachês = **50 doses** |
 | Sabores à escolha | Menta · Frutas vermelhas · Citrus · Melancia com limão |
-| Brindes | Mousepad (R$ 35) · Bloco de notas (R$ 45) · Mini pouch melancia (R$ 25) |
+| Brindes | Mousepad (R$ 35) · Bloco de notas (R$ 45) · 9 sachês de melancia com limão (R$ 25) |
 | Por pouch | De R$ 162,49 por **R$ 149,95** |
 | De | R$ 429,98 |
 | Por | **R$ 299,90** — 30% OFF, economia de R$ 130,08 |
@@ -102,7 +102,7 @@ A versão em uso é a **sem título**, porque o selo azul ao lado já diz
 
 **1. Depoimentos.** ~~Número de avaliações~~ — resolvido: o card agora traz
 **4,5 estrelas** (4 cheias + `#i-star-half`, meia estrela feita com gradiente de
-50% sobre o mesmo path da estrela) e **"+30.000 Clientes Energizados"**, número
+50% sobre o mesmo path da estrela) e **"+50.000 Clientes Energizados"**, número
 dado pelo Dotinho. Não há mais nenhum `data-placeholder` na página.
 
 Falta ainda o bloco de depoimentos em si — a V2 não tem prova social, por
@@ -128,7 +128,7 @@ azul. O primeiro pouch usa o `sabor-menta` (azul) e o segundo o `sabor-frutas`
 | Pouch de 25 sachês | R$ 162,49 | R$ 149,95 |
 | Mousepad DOT | R$ 35 | Grátis |
 | Bloco de notas | R$ 45 | Grátis |
-| Mini pouch melancia | R$ 25 | Grátis |
+| 9 sachês de melancia com limão | R$ 25 | Grátis |
 
 **A conta fecha com os dois preços da página** — e é por isso que esses números
 não podem ser mexidos isoladamente:
@@ -237,11 +237,11 @@ marca o progresso, e a seta some na etapa 1.
 As etapas ficam **lado a lado num trilho** e trocar de etapa é um `translateX`
 com transição de 380ms. Dá para **arrastar** entre elas — mouse ou dedo.
 
-Na etapa 3 os brindes ficam com o **mini pouch em cima, centralizado**, e o
+Na etapa 3 os brindes ficam com os **9 sachês de melancia em cima, centralizados**, e o
 mousepad e o bloco embaixo (`.pick--wide` atravessa as duas colunas).
 
 A etapa 3 mostra o que a pessoa realmente ganha — Mousepad (R$ 35), Bloco de
-notas (R$ 45) e Mini pouch melancia (R$ 25), com as imagens `brinde-*.webp`.
+notas (R$ 45) e 9 sachês de melancia com limão (R$ 25), com as imagens `brinde-*.webp`.
 São 3, não 4: o mockup trazia "Apoio de Teclado" e "Frete Grátis", que não estão
 na oferta.
 
@@ -314,8 +314,8 @@ https://loja.exemplo.com/kit?pouch1=menta&pouch2=melancia
 
 ### Quem abre o popup
 
-Os **dois** "Comprar agora" da página — o do card e o do fim da seção de
-benefícios. Marque com `data-open-flavors`:
+Os **dois** CTAs da página — o "Comprar agora" do card e o "Quero resgatar
+meus kits" do fim da seção de benefícios. Marque com `data-open-flavors`:
 
 ```html
 <a class="btn" href="#" id="checkoutBtn" data-open-flavors>
