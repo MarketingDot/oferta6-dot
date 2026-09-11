@@ -98,6 +98,17 @@ A versão em uso é a **sem título**, porque o selo azul ao lado já diz
 > grep -rn 'brinde-saches-melancia' index.html v1.html
 > ```
 
+### Artes da galeria
+
+As lâminas 3, 4 e 5 da galeria (mousepad, bloco de notas e sachês) usam artes
+prontas, com o fundo azul e o selo GRÁTIS já na imagem: os `galeria-*-gratis`.
+Vieram em 1254px, exatamente 2× os 627px da galeria no desktop, então só foram
+convertidas para WebP (juntas, ~370KB). Ocupam o quadro inteiro, sem respiro e
+sem sombra (`.gallery__slide--full`), inclusive nas miniaturas.
+
+Os recortes `brinde-*.webp` continuam no resto da página: composição do kit,
+lista do card, cards de brinde e popup.
+
 ## Pendências (a página está no ar com elas)
 
 **1. Depoimentos.** ~~Número de avaliações~~ — resolvido: o card agora traz
@@ -119,8 +130,8 @@ prorrogação e estado final. Ver "Contador".
 ## Bloco "Brindes grátis"
 
 A caixa tracejada do card detalha a oferta item a item, sob um único título
-azul. O primeiro pouch usa o `sabor-menta` (azul) e o segundo o `sabor-frutas`
-(rosa), para os dois não saírem iguais:
+azul. As imagens dos dois pouches revezam os 4 sabores (ver "Rodízio de sabores
+nos pouches", abaixo):
 
 | Item | De | Por |
 |---|---|---|
@@ -148,6 +159,22 @@ o destaque é sempre azul, e o amarelo fica reservado para o que não se paga.
 > A lista `.specs` que ficava acima do bloco (2× pouch, 4 sabores, 80mg) foi
 > removida: o bloco já mostra os 2 pouches e os bullets do rodapé já dizem os
 > sabores e as 50 doses.
+
+### Rodízio de sabores nos pouches
+
+As imagens dos dois pouches **revezam os 4 sabores** a cada 1,7s, para mostrar
+que o sabor é escolha da pessoa. As 4 `sabor-*.webp` ficam empilhadas no quadro
+de 48px e só a que tem `.is-on` aparece, com o mesmo esmaecer do rodízio do
+popup. Como os 4 sabores foram normalizados com a mesma altura de pouch, a troca
+não pula de tamanho.
+
+A ordem das imagens no HTML põe o 2º pouch **um sabor à frente** do 1º (menta e
+frutas vermelhas no começo), e o JS usa o mesmo índice para os dois — então eles
+nunca mostram o mesmo sabor ao mesmo tempo.
+
+- Sem JS, fica a primeira imagem de cada pouch.
+- O timer só roda com a caixa à vista (`IntersectionObserver`).
+- Quem tem `prefers-reduced-motion` vê as imagens paradas.
 
 ## Contador
 

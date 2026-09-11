@@ -348,6 +348,37 @@
     render();
   }
 
+  /* ---------- Rodizio de sabores nos pouches do card --------------
+     As 4 imagens de cada pouch ficam empilhadas e uma aparece por vez,
+     para mostrar que o sabor e escolha da pessoa. A ordem das imagens no
+     HTML ja poe o 2o pouch um sabor a frente do 1o, e o indice e o mesmo
+     para os dois -- entao eles nunca mostram o mesmo sabor juntos.
+     So gira com a caixa a vista, e nao gira para quem pediu menos movimento.
+  ---------------------------------------------------------------- */
+  var pouchGiro = [].slice.call(document.querySelectorAll('.gift-list__img--giro'));
+  var menosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (pouchGiro.length && !menosMovimento && 'IntersectionObserver' in window) {
+    var pouchIdx = 0;
+    var pouchTimer = null;
+
+    var giraPouches = function () {
+      pouchIdx++;
+      pouchGiro.forEach(function (caixa) {
+        var imgs = caixa.children;
+        for (var i = 0; i < imgs.length; i++) {
+          imgs[i].classList.toggle('is-on', i === pouchIdx % imgs.length);
+        }
+      });
+    };
+
+    new IntersectionObserver(function (entries) {
+      var avista = entries[entries.length - 1].isIntersecting;
+      if (avista && !pouchTimer) pouchTimer = setInterval(giraPouches, 1700);
+      if (!avista && pouchTimer) { clearInterval(pouchTimer); pouchTimer = null; }
+    }).observe(pouchGiro[0].closest('.gifts-box') || pouchGiro[0]);
+  }
+
   /* ---------- Carrosséis ----------------------------------------- */
   if (typeof Swiper === 'undefined') return;
 

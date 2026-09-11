@@ -304,6 +304,12 @@ button { font: inherit; color: inherit; }
 
 .gallery__slide > img { filter: drop-shadow(0 16px 24px rgba(0,0,0,.4)); }
 
+/* Laminas com arte pronta (fundo azul e selo GRATIS ja na imagem): ocupam o
+   quadro inteiro, sem respiro e sem sombra. A arte e quadrada como a lamina.
+   0px e nao 0: o --frame-pad entra num calc() com 100%, e 0 sem unidade invalida */
+.gallery__slide--full { --frame-pad: 0px; }
+.gallery__slide--full > img { filter: none; }
+
 /* Composições montadas em CSS dentro da lâmina */
 .compo { position: absolute; inset: var(--frame-pad); display: flex; align-items: center; justify-content: center; gap: 2%; }
 .compo img { flex: 0 1 auto; max-height: 100%; width: auto; filter: drop-shadow(0 14px 20px rgba(0,0,0,.42)); }
@@ -356,6 +362,7 @@ button { font: inherit; color: inherit; }
 
 .gallery__thumbs .swiper-slide-thumb-active { opacity: 1; border-color: var(--blue); }
 .gallery__thumbs .gallery__slide { --frame-pad: 5px; }
+.gallery__thumbs .gallery__slide--full { --frame-pad: 0px; }
 .gallery__thumbs .compo { inset: 5px; }
 
 /* --- Card --- */
@@ -401,6 +408,20 @@ button { font: inherit; color: inherit; }
   width: 48px; height: 48px;
   object-fit: contain;
 }
+
+/* pouches com rodizio de sabores: as 4 imagens empilhadas no mesmo quadro e
+   so a .is-on aparece, com o mesmo esmaecer do rodizio do popup. Os 4 sabores
+   foram normalizados com a mesma altura de pouch, entao a troca nao pula */
+.gift-list__img--giro { position: relative; }
+.gift-list__img--giro img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(.88);
+  transition: opacity .35s ease, transform .35s ease;
+}
+.gift-list__img--giro img.is-on { opacity: 1; transform: none; }
 .gift-list__name { flex: 1; min-width: 0; }
 .gift-list__was  { flex: none; white-space: nowrap; color: var(--gray); text-decoration: line-through; }
 
@@ -546,8 +567,6 @@ button { font: inherit; color: inherit; }
 .pick__media img { width: 100%; height: 150px; object-fit: contain; }
 
 .pick__name  { font-size: 15px; font-weight: 700; font-style: italic; line-height: 1.2; color: var(--navy); }
-.pick__value { font-size: 13px; font-weight: 700; color: var(--blue); }
-
 /* o selo so aparece quando marcado */
 .pick__check { position: absolute; top: -9px; right: -9px; color: var(--yellow); opacity: 0; transform: scale(.6); transition: opacity .14s, transform .14s; }
 .pick.is-on, .pick.is-won { border-color: var(--yellow); }
@@ -606,7 +625,7 @@ button { font: inherit; color: inherit; }
 /* quem pediu menos movimento nao leva nem carrossel nem slide de abertura */
 @media (prefers-reduced-motion: reduce) {
   .modal__backdrop, .modal__sheet, .modal__track, .pick__check,
-  .unlocked__media img { transition: none; }
+  .unlocked__media img, .gift-list__img--giro img { transition: none; }
   .modal__sheet { transform: none; }
 }
 
