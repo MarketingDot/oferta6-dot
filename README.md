@@ -263,6 +263,10 @@ Escolher um sabor **avança sozinho** depois de 320ms — o atraso existe para o
 selo amarelo aparecer antes da tela trocar. A seta volta, a barra de 3 traços
 marca o progresso, e a seta some na etapa 1.
 
+O avanço vai no `click` do input, e não no `change`. Quem volta do checkout
+encontra os sabores restaurados pelo navegador, e clicar de novo no sabor que
+já estava marcado não dispara `change`: a pessoa ficava presa na etapa.
+
 As etapas ficam **lado a lado num trilho** e trocar de etapa é um `translateX`
 com transição de 380ms. Dá para **arrastar** entre elas — mouse ou dedo.
 
@@ -357,8 +361,11 @@ https://seguro.minhadot.com/r/T7OSNI4X3Z:1,R5F5MQP29R:1,4V00F08D6G:1,A5DC5OXJLB:
    data-checkout="https://seguro.minhadot.com/r/" data-promocode="DOTDDC2026">
 ```
 
-> Com `data-checkout` preenchido, o **Comprar agora** do card passa direto para
-> o checkout se os dois sabores já estiverem escolhidos; senão, abre o popup.
+> Os dois CTAs **sempre abrem o popup**: só o **Finalizar compra** leva para a
+> Yampi. Antes, o **Comprar agora** do card pulava direto para o checkout quando
+> os dois sabores já estavam marcados, e isso quebrava na volta do checkout: o
+> navegador restaura os radios marcados, mas não o link, e o clique caía no
+> `href="#"` sem abrir nada.
 
 > A Yampi **guarda o cupom na sessão** entre links `/r/`: um link sem
 > `promocode` herda o cupom que a pessoa já tenha usado na loja.

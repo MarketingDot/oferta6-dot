@@ -306,11 +306,18 @@
       if (arrastando) { e.preventDefault(); e.stopPropagation(); }
     }, true);
 
-    // escolher avanca sozinho -- o atraso deixa o selo aparecer antes de trocar
-    modal.addEventListener('change', function (e) {
-      if (!e.target.name) return;
+    modal.addEventListener('change', render);
+
+    // escolher avanca sozinho -- o atraso deixa o selo aparecer antes de trocar.
+    // Vai no click do input, e nao no change: quem volta do checkout encontra os
+    // sabores restaurados pelo navegador, e clicar de novo no sabor que ja estava
+    // marcado nao dispara change -- a pessoa ficava presa na etapa. O clique no
+    // cartao (label) chega aqui como um click no input, entao conta uma vez so.
+    modal.addEventListener('click', function (e) {
+      var input = e.target;
+      if (!input.matches || !input.matches('.pick input')) return;
       render();
-      var salto = e.target.name === 'pouch1' ? 2 : 3;
+      var salto = input.name === 'pouch1' ? 2 : 3;
       setTimeout(function () { if (!modal.hidden) ir(salto); }, 320);
     });
 
@@ -355,11 +362,13 @@
       else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primeiro.focus(); }
     });
 
-    // os dois CTAs da pagina abrem o popup em vez de ir direto para o
-    // checkout -- o do card e o do fim da secao de beneficios
+    // os dois CTAs da pagina sempre abrem o popup -- o do card e o do fim da
+    // secao de beneficios. Quem leva para a Yampi e so o Finalizar compra.
+    // Pular direto para o checkout quando os sabores ja estavam marcados
+    // quebrava na volta do checkout: o navegador restaura os radios mas nao o
+    // link, e o clique caia no href="#" sem abrir nada.
     document.querySelectorAll('[data-open-flavors]').forEach(function (btn) {
       btn.addEventListener('click', function (e) {
-        if (btn.dataset.checkout && escolhido('pouch1') && escolhido('pouch2')) return;
         e.preventDefault();
         abrir();
       });
