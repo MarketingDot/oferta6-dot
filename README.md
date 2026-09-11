@@ -252,6 +252,13 @@ popup não muda de tamanho ao trocar de etapa. Por isso a troca é por
 O trilho usa `align-items: stretch` pelo mesmo motivo: sem isso o painel dos
 brindes ficava 55px mais alto que os de sabor.
 
+**O corpo do popup não encolhe** (`.modal__body { flex: none }`). Com
+`overflow: hidden`, um item flex pode encolher até zero, e numa tela baixa
+(notebook de 720px, iPhone SE) a 2ª fileira de sabores ficava cortada sem dar
+para rolar. Sem encolher, se faltar altura quem rola é a folha. E para quase
+nunca precisar rolar, a altura das imagens acompanha a altura da tela
+(`clamp()` com `dvh`): até 150px no celular e 190px no desktop.
+
 O timer do rodízio só roda com a barra à vista — para na etapa 3 e ao fechar o
 popup. As 3 miniaturas lado a lado comiam 110px dos 345 do mobile e jogavam o
 texto para 4 linhas; uma de cada vez fecha em 2.
@@ -327,6 +334,10 @@ Os inputs são radios de verdade em `<fieldset>`, fora da tela via `clip-path` �
 não `display: none`, senão perderiam o foco. O estado visual é a classe `.is-on`
 e o anel de foco é `.has-focus`, ambos postos pelo JS para não depender de
 `:has()`.
+
+O `.has-focus` só entra quando o foco é de teclado (`:focus-visible`). Ao abrir
+o popup pelo mouse, o foco vai para o 1º sabor, e o anel sempre aceso parecia
+que a menta estava escolhida.
 
 ### Como a escolha chega no checkout
 

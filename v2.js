@@ -337,9 +337,15 @@
       el.addEventListener('click', fechar);
     });
 
-    // o input real esta fora da tela, entao o anel de foco vai no cartao
+    // o input real esta fora da tela, entao o anel de foco vai no cartao --
+    // so com :focus-visible. Ao abrir o popup pelo mouse o foco vai para o 1o
+    // sabor, e o anel sempre aceso parecia que a menta estava escolhida.
+    function focoVisivel(el) {
+      try { return el.matches(':focus-visible'); } catch (e) { return true; }
+    }
+
     picks.forEach(function (input) {
-      input.addEventListener('focus', function () { input.parentNode.classList.add('has-focus'); });
+      input.addEventListener('focus', function () { if (focoVisivel(input)) input.parentNode.classList.add('has-focus'); });
       input.addEventListener('blur',  function () { input.parentNode.classList.remove('has-focus'); });
     });
 

@@ -500,6 +500,7 @@ button { font: inherit; color: inherit; }
   display: flex; flex-direction: column; gap: 14px;
   width: min(720px, 100%);
   max-height: 92vh;
+  max-height: 92dvh;
   padding: 10px var(--gutter) calc(var(--gutter) + env(safe-area-inset-bottom));
   border-radius: 20px 20px 0 0;
   background: var(--cream-card);
@@ -531,7 +532,11 @@ button { font: inherit; color: inherit; }
 /* as 3 etapas ficam lado a lado num trilho; trocar de etapa e translateX.
    touch-action: pan-y deixa a rolagem vertical para o navegador e fica so
    com o gesto horizontal -- sem isso o arraste briga com o scroll da folha. */
-.modal__body  { overflow: hidden; }
+/* flex: none -- com overflow: hidden o corpo, como item flex, podia encolher
+   ate zero dentro da folha, e numa tela baixa (notebook de 720px, iPhone SE) a
+   2a fileira de sabores ficava cortada sem rolagem. Sem encolher, se faltar
+   altura quem rola e a folha. */
+.modal__body  { flex: none; overflow: hidden; }
 .modal__track {
   display: flex;
   align-items: stretch;
@@ -564,7 +569,9 @@ button { font: inherit; color: inherit; }
 }
 
 .pick__media { display: grid; place-items: center; border-radius: 10px; background: var(--cream-2); }
-.pick__media img { width: 100%; height: 150px; object-fit: contain; }
+/* a imagem acompanha a altura da tela para as 2 fileiras e o rodape caberem
+   sem rolar num celular baixo: 150px a partir de ~730px de altura */
+.pick__media img { width: 100%; height: 150px; height: clamp(96px, calc(46dvh - 186px), 150px); object-fit: contain; }
 
 .pick__name  { font-size: 15px; font-weight: 700; font-style: italic; line-height: 1.2; color: var(--navy); }
 /* o selo so aparece quando marcado */
@@ -631,8 +638,9 @@ button { font: inherit; color: inherit; }
 
 @media (min-width: 992px) {
   .modal { align-items: center; }
-  .modal__sheet { border-radius: 20px; max-height: 88vh; }
-  .pick__media img { height: 190px; }
+  .modal__sheet { border-radius: 20px; max-height: 88vh; max-height: 88dvh; }
+  /* 190px a partir de ~880px de altura; num notebook de 720px fica em ~120px */
+  .pick__media img { height: 190px; height: clamp(100px, calc(44dvh - 196px), 190px); }
   .pick__name { font-size: 17px; }
 }
 
