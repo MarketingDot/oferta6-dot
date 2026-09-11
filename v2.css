@@ -168,19 +168,18 @@ button { font: inherit; color: inherit; }
 .nav-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   height: 48px;
   padding-inline: var(--gutter);
   background: var(--navy);
 }
 
-.nav-row button { display: grid; place-items: center; width: 32px; height: 32px; background: none; border: 0; color: var(--cream); cursor: pointer; }
-.nav-logo { height: 26px; width: auto; }
+.nav-logo { height: 36px; width: auto; }
 
 @media (min-width: 992px) {
   .announce { height: 28px; font-size: 13px; }
   .nav-row  { height: 64px; }
-  .nav-logo { height: 34px; }
+  .nav-logo { height: 44px; }
 }
 
 .salebar {
@@ -313,15 +312,6 @@ button { font: inherit; color: inherit; }
 /* Composições montadas em CSS dentro da lâmina */
 .compo { position: absolute; inset: var(--frame-pad); display: flex; align-items: center; justify-content: center; gap: 2%; }
 .compo img { flex: 0 1 auto; max-height: 100%; width: auto; filter: drop-shadow(0 14px 20px rgba(0,0,0,.42)); }
-
-/* Kit: 2 pouches na frente, brindes menores embaixo */
-.compo--kit { display: block; }
-.compo--kit img { position: absolute; }
-.compo--kit .c-pouch-a { width: 42%; left: 6%;  top: 2%;  transform: rotate(-7deg); }
-.compo--kit .c-pouch-b { width: 42%; right: 6%; top: 2%;  transform: rotate(7deg); }
-.compo--kit .c-pad     { width: 30%; left: 2%;  bottom: 1%; transform: rotate(-6deg); }
-.compo--kit .c-bloco   { width: 26%; right: 3%; bottom: 2%; transform: rotate(6deg); }
-.compo--kit .c-mini    { width: 40%; left: 30%; bottom: -1%; }
 
 /* Sabores: 4 colunas de largura idêntica. Como os 4 PNGs foram
    normalizados no mesmo canvas (900×1300) com a mesma altura de pouch,

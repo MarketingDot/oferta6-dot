@@ -21,7 +21,8 @@ python3 -m http.server 4321 --directory .
 
 ## V2 — as 4 telas, na ordem
 
-1. **Header + barra de countdown** — faixa de aviso, nav com o logo, barra com
+1. **Header + barra de countdown** — faixa de aviso, nav só com o logo
+   centralizado (sem menu e sem sacola, que não levavam a lugar nenhum), barra com
    HRS:MIN:SEG. Contagem de sessão em **três estados**, como na RYZE — detalhe
    na seção "Contador" abaixo.
 2. **Bloco da oferta** — título, subtítulo com a economia, galeria com 5
@@ -100,14 +101,20 @@ A versão em uso é a **sem título**, porque o selo azul ao lado já diz
 
 ### Artes da galeria
 
-As lâminas 3, 4 e 5 da galeria (mousepad, bloco de notas e sachês) usam artes
-prontas, com o fundo azul e o selo GRÁTIS já na imagem: os `galeria-*-gratis`.
-Vieram em 1254px, exatamente 2× os 627px da galeria no desktop, então só foram
-convertidas para WebP (juntas, ~370KB). Ocupam o quadro inteiro, sem respiro e
-sem sombra (`.gallery__slide--full`), inclusive nas miniaturas.
+A capa (lâmina 1) e as lâminas 3, 4 e 5 (mousepad, bloco de notas e sachês)
+usam artes prontas, que ocupam o quadro inteiro, sem respiro e sem sombra
+(`.gallery__slide--full`), inclusive nas miniaturas.
 
-Os recortes `brinde-*.webp` continuam no resto da página: composição do kit,
-lista do card, cards de brinde e popup.
+- **Capa:** `galeria-capa-kit-30off`, a arte "2 pouches da sua escolha" com os 3
+  brindes, "3 brindes grátis" e "30% OFF". Substituiu a composição do kit que era
+  montada em CSS. Veio em 1080px, perto do ideal de 1254px (2× os 627px da
+  galeria no desktop), e só foi convertida para WebP.
+- **Brindes:** `galeria-*-gratis`, com o fundo azul e o selo GRÁTIS. Vieram em
+  1254px, exatamente 2× os 627px da galeria no desktop, e só foram convertidas
+  para WebP (juntas, ~370KB).
+
+Os recortes `brinde-*.webp` continuam no resto da página: lista do card, cards
+de brinde e popup.
 
 ## Pendências (a página está no ar com elas)
 
