@@ -82,9 +82,9 @@
      3 etapas: sabor do pouch 1, sabor do pouch 2, brindes.
      Escolher avanca sozinho; a seta volta; a barra marca o progresso.
 
-     A escolha sai por dois caminhos, iguais aos de antes:
+     A escolha sai por dois caminhos:
        - data-pouch1 / data-pouch2 no botao de checkout
-       - query string, quando o botao tiver data-checkout com a URL real
+       - o link de compra da Yampi, quando o botao tiver data-checkout
   ---------------------------------------------------------------- */
   var modal = document.getElementById('flavorModal');
 
@@ -109,6 +109,31 @@
 
     function escolhido(grupo) {
       return modal.querySelector('input[name="' + grupo + '"]:checked');
+    }
+
+    /* Link de compra da Yampi: /r/TOKEN:QTD,TOKEN:QTD
+       Vao os 2 pouches escolhidos e os brindes da etapa 3, cada um com o token
+       no proprio data-yampi -- tirar um brinde do popup tira ele do carrinho.
+       Sabor repetido vira quantidade 2 do mesmo token. O cupom sai do
+       data-promocode do botao (vazio = sem cupom), e as utm_* do anuncio vao
+       junto para a Yampi atribuir a venda a campanha. */
+    var brindes = [].slice.call(modal.querySelectorAll('.pick-grid--gifts [data-yampi]'));
+
+    function linkYampi(base, a, b) {
+      var qtd = {};
+      var ordem = [];
+      [a, b].concat(brindes).forEach(function (el) {
+        var token = el.dataset.yampi;
+        if (!qtd[token]) { qtd[token] = 0; ordem.push(token); }
+        qtd[token]++;
+      });
+
+      var url = new URL(base + ordem.map(function (t) { return t + ':' + qtd[t]; }).join(','));
+      if (checkout.dataset.promocode) url.searchParams.set('promocode', checkout.dataset.promocode);
+      new URLSearchParams(location.search).forEach(function (valor, chave) {
+        if (chave.indexOf('utm_') === 0) url.searchParams.set(chave, valor);
+      });
+      return url.toString();
     }
 
     function render() {
@@ -153,12 +178,7 @@
 
         var base = checkout.dataset.checkout;
         if (base && a && b) {
-          try {
-            var url = new URL(base, location.href);
-            url.searchParams.set('pouch1', a.value);
-            url.searchParams.set('pouch2', b.value);
-            checkout.href = url.toString();
-          } catch (e) {}
+          try { checkout.href = linkYampi(base, a, b); } catch (e) {}
         }
       }
     }

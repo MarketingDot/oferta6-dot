@@ -236,7 +236,8 @@
             <span class="reserved">Oferta reservada</span>
           </div>
 
-          <a class="btn" href="#" id="checkoutBtn" data-open-flavors>
+          <!-- data-checkout: link de compra da Yampi (/r/). data-promocode: cupom que abate o preco; vazio = sem cupom -->
+          <a class="btn" href="#" id="checkoutBtn" data-open-flavors data-checkout="https://seguro.minhadot.com/r/" data-promocode="DOTDDC2026">
             Comprar agora
             <svg width="22" height="22" aria-hidden="true"><use href="#i-arrow"/></svg>
           </a>
@@ -425,25 +426,25 @@
         <legend class="sr-only">Sabor do 1º pouch</legend>
         <div class="pick-grid">
           <label class="pick">
-            <input type="radio" name="pouch1" value="menta">
+            <input type="radio" name="pouch1" value="menta" data-yampi="T7OSNI4X3Z">
             <span class="pick__media"><img src="assets/sabor-menta.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Menta</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </label>
           <label class="pick">
-            <input type="radio" name="pouch1" value="frutas">
+            <input type="radio" name="pouch1" value="frutas" data-yampi="KEWK5304MU">
             <span class="pick__media"><img src="assets/sabor-frutas.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Frutas Vermelhas</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </label>
           <label class="pick">
-            <input type="radio" name="pouch1" value="melancia">
+            <input type="radio" name="pouch1" value="melancia" data-yampi="R5F5MQP29R">
             <span class="pick__media"><img src="assets/sabor-melancia.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Melancia com Limão</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </label>
           <label class="pick">
-            <input type="radio" name="pouch1" value="citrus">
+            <input type="radio" name="pouch1" value="citrus" data-yampi="5IM1U6QS0Q">
             <span class="pick__media"><img src="assets/sabor-citrus.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Citrus</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -455,25 +456,25 @@
         <legend class="sr-only">Sabor do 2º pouch</legend>
         <div class="pick-grid">
           <label class="pick">
-            <input type="radio" name="pouch2" value="menta">
+            <input type="radio" name="pouch2" value="menta" data-yampi="T7OSNI4X3Z">
             <span class="pick__media"><img src="assets/sabor-menta.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Menta</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </label>
           <label class="pick">
-            <input type="radio" name="pouch2" value="frutas">
+            <input type="radio" name="pouch2" value="frutas" data-yampi="KEWK5304MU">
             <span class="pick__media"><img src="assets/sabor-frutas.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Frutas Vermelhas</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </label>
           <label class="pick">
-            <input type="radio" name="pouch2" value="melancia">
+            <input type="radio" name="pouch2" value="melancia" data-yampi="R5F5MQP29R">
             <span class="pick__media"><img src="assets/sabor-melancia.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Melancia com Limão</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </label>
           <label class="pick">
-            <input type="radio" name="pouch2" value="citrus">
+            <input type="radio" name="pouch2" value="citrus" data-yampi="5IM1U6QS0Q">
             <span class="pick__media"><img src="assets/sabor-citrus.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Citrus</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -483,17 +484,17 @@
 
       <div class="modal__panel" data-step="3" inert aria-hidden="true">
         <div class="pick-grid pick-grid--gifts">
-          <div class="pick is-won pick--wide">
+          <div class="pick is-won pick--wide" data-yampi="4V00F08D6G">
             <span class="pick__media"><img src="assets/brinde-saches-melancia.webp" alt="" loading="lazy"></span>
             <span class="pick__name">9 Sachês de Melancia com Limão</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="pick is-won">
+          <div class="pick is-won" data-yampi="A5DC5OXJLB">
             <span class="pick__media"><img src="assets/brinde-mousepad.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Mousepad DOT</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-          <div class="pick is-won">
+          <div class="pick is-won" data-yampi="FQMYYG3FTW">
             <span class="pick__media"><img src="assets/brinde-bloco.webp" alt="" loading="lazy"></span>
             <span class="pick__name">Bloco de Notas</span>
             <svg class="pick__check" width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="currentColor"/><path d="m7 12.4 3.2 3.2L17 8.8" fill="none" stroke="#04142f" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>

@@ -119,7 +119,9 @@ dado pelo Dotinho. Não há mais nenhum `data-placeholder` na página.
 Falta ainda o bloco de depoimentos em si — a V2 não tem prova social, por
 decisão de escopo (só as 4 telas da RYZE).
 
-**2. Link do checkout.** `<a class="btn" href="#" id="checkoutBtn">` no card.
+**2. ~~Link do checkout~~** — resolvido: o botão leva ao checkout da Yampi com os
+2 pouches, os 3 brindes e o cupom `DOTDDC2026`. Ver "Como a escolha chega no
+checkout".
 
 **3. ~~Prazo da oferta~~** — resolvido: virou contagem de sessão de 7 minutos com
 prorrogação e estado final. Ver "Contador".
@@ -324,20 +326,51 @@ e o anel de foco é `.has-focus`, ambos postos pelo JS para não depender de
 
 ### Como a escolha chega no checkout
 
-Igual ao seletor anterior — `data-pouch1`/`data-pouch2` no botão, e query string
-quando `data-checkout` tiver a URL real:
+O **Finalizar compra** leva ao checkout da Yampi (`seguro.minhadot.com`) pelo
+link `/r/TOKEN:QTD,TOKEN:QTD`. Vão no carrinho os 2 pouches escolhidos e os 3
+brindes da etapa 3, cada item com o token da Yampi no próprio `data-yampi`:
+
+| Item | Token |
+|---|---|
+| Pouch menta | `T7OSNI4X3Z` |
+| Pouch frutas vermelhas | `KEWK5304MU` |
+| Pouch citrus | `5IM1U6QS0Q` |
+| Pouch melancia com limão | `R5F5MQP29R` |
+| 9 sachês de melancia com limão | `4V00F08D6G` |
+| Mousepad | `A5DC5OXJLB` |
+| Bloco de notas | `FQMYYG3FTW` |
+
+```
+https://seguro.minhadot.com/r/T7OSNI4X3Z:1,R5F5MQP29R:1,4V00F08D6G:1,A5DC5OXJLB:1,FQMYYG3FTW:1
+```
+
+- Sabor repetido vira quantidade 2 do mesmo token (`T7OSNI4X3Z:2`).
+- Os brindes saem dos cartões da etapa 3: tirar um cartão do popup tira o item
+  do carrinho.
+- As `utm_*` da página vão junto, para a Yampi atribuir a venda à campanha.
+- O cupom que abate o preço (`DOTDDC2026`) fica no `data-promocode` do botão e
+  vai como `?promocode=`. Vazio, o link sai sem cupom. O valor do cupom é
+  configurado na Yampi, então mudar o valor não exige publicar a página de novo.
 
 ```html
-<a class="btn" id="checkoutBtn" data-checkout="https://loja.exemplo.com/kit">
+<a class="btn" href="#" id="checkoutBtn" data-open-flavors
+   data-checkout="https://seguro.minhadot.com/r/" data-promocode="DOTDDC2026">
 ```
 
-```
-https://loja.exemplo.com/kit?pouch1=menta&pouch2=melancia
-```
+> Com `data-checkout` preenchido, o **Comprar agora** do card passa direto para
+> o checkout se os dois sabores já estiverem escolhidos; senão, abre o popup.
 
-> Enquanto não houver `data-checkout`, o botão **sempre** abre o popup. Quando a
-> URL entrar, ele passa direto para o checkout se os dois sabores já estiverem
-> escolhidos.
+> A Yampi **guarda o cupom na sessão** entre links `/r/`: um link sem
+> `promocode` herda o cupom que a pessoa já tenha usado na loja.
+
+> **Preços na Yampi** (conferido em 2026-09-11, sem cupom): pouch R$ 162,49,
+> com 2 unidades por R$ 299,99 no desconto progressivo; 9 sachês R$ 25,00;
+> mousepad R$ 35,00; bloco R$ 45,00, os mesmos valores do card. O progressivo
+> não pega nos brindes. O carrinho soma R$ 429,98 e fecha em **R$ 404,99** com
+> qualquer combinação, inclusive sabor repetido. Para chegar nos R$ 299,90 da
+> página, o cupom precisa abater **R$ 105,09** em valor fixo e acumular com o
+> progressivo. Se não acumular, a Yampi aplica só o maior desconto, e o cupom
+> teria de ser de R$ 130,08.
 
 ### Quem abre o popup
 
